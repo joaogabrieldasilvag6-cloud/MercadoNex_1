@@ -1,0 +1,185 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MercadoNex - Sistema Inteligente para Mercados</title>
+
+  <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon/favicon-96x96.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon/favicon.svg' %}">
+  <link rel="shortcut icon" href="{% static 'img/favicon/favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+
+  <script src="https://kit.fontawesome.com/4b3fbb326a.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="header">
+
+<nav class="navbar">
+
+  <div class="logo">
+    MercadoNex
+  </div>
+
+
+<ul class="nav-links">
+<li><a href="#sobre">Sobre</a></li>
+<li><a href="#funcionalidades">Funcionalidades</a></li>
+<li><a href="#planos">Planos</a></li>
+<li><a href="#contato">Contato</a></li>
+</ul>
+
+<div class="buttons">
+<a href="{% url 'login'%}" class="btn btn-outline">Entrar</a>
+<a href="{% url 'cadastro'%}" class="btn btn-primary">Criar Conta</a>
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div class="hero-text">
+
+<h1>
+Controle seu mercado de forma moderna e inteligente
+</h1>
+
+<p>
+O MercadoNex é um sistema completo de gerenciamento para supermercados,
+mercadinhos e distribuidoras.
+Controle produtos, clientes, vendas, estoque e relatórios em um único lugar.
+</p>
+
+<div class="hero-buttons">
+
+<a href="{% url 'cadastro'%}" class="btn btn-primary">
+Começar Agora
+</a>
+
+<a href="#funcionalidades" class="btn btn-outline">
+Ver Funcionalidades
+</a>
+
+</div>
+
+</div>
+
+<div class="hero-image">
+<img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=1200&auto=format&fit=crop" alt="Dashboard MercadoNex">
+</div>
+
+</section>
+
+</header>
+
+<section class="features" id="funcionalidades">
+
+<h2>Funcionalidades do Sistema</h2>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+<h3><i class="fa-solid fa-box-archive" style="color: rgb(192, 177, 125);"></i> Gestão de Produtos</h3>
+<p>
+Cadastre produtos, controle estoque, preços e quantidades em tempo real.
+</p>
+</div>
+
+<div class="feature-card">
+<h3><i class="fa-solid fa-users" style="color: rgb(4, 96, 167);"></i> Gestão de Clientes</h3>
+<p>
+Cadastre clientes, CPF, contatos, pedidos e saldo devedor facilmente.
+</p>
+</div>
+
+<div class="feature-card">
+<h3><i class="fa-solid fa-sack-dollar" style="color: rgb(222, 180, 26);"></i> Controle Financeiro</h3>
+<p>
+Acompanhe vendas, faturamento e fluxo financeiro do seu negócio.
+</p>
+</div>
+
+<div class="feature-card">
+<h3><i class="fa-solid fa-square-poll-vertical" style="color: rgb(13, 95, 183);"></i> Relatórios Inteligentes</h3>
+<p>
+Visualize dados importantes do mercado através de relatórios modernos.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="about" id="sobre">
+
+<div class="about-text">
+
+<h2>Por que escolher o MercadoNex?</h2>
+
+<p>
+Criado para oferecer praticidade, velocidade e organização,
+o MercadoNex ajuda mercados a crescerem com tecnologia moderna.
+</p>
+
+<ul>
+<li>✔ Interface moderna e intuitiva</li>
+<li>✔ Sistema rápido e responsivo</li>
+<li>✔ Controle total do negócio</li>
+<li>✔ Fácil de usar</li>
+<li>✔ Segurança e organização</li>
+</ul>
+
+</div>
+
+<div class="about-image">
+<img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=1200&auto=format&fit=crop" alt="Mercado">
+</div>
+
+</section>
+
+
+<section class="cta">
+
+<h2>
+Pronto para transformar seu mercado?
+</h2>
+
+<p>
+Comece agora a utilizar o MercadoNex.
+</p>
+
+<a href="{% url 'cadastro'%}" class="btn btn-primary">
+Criar Conta Gratuitamente
+</a>
+
+</section>
+
+<footer id="contato">
+
+<h2>MercadoNex</h2>
+
+<p>
+Sistema moderno de gerenciamento para mercados.
+</p>
+
+<div class="footer-links">
+<a href="#">Instagram</a>
+<a href="#">WhatsApp</a>
+<a href="#">Suporte</a>
+</div>
+
+<p class="copyright">
+© 2026 MercadoNex - Todos os direitos reservados.
+</p>
+
+</footer>
+
+<script src=" {% static 'js/script.js' %} "></script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - MercadoNex</title>
+
+  <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon/favicon-96x96.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon/favicon.svg' %}">
+  <link rel="shortcut icon" href="{% static 'img/favicon/favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
+
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+        <div class="logo-icon"> <img src="{% static 'img/Logo.jpeg' %}" alt="logo" width="100%" height="100%" ></div>
+      <div class="logo-text">
+        MercadoNex
+        <span>Sistema de Gestão</span>
+      </div>
+    </a>
+
+    <div class="nav-links">
+      <a href="{% url 'login'%}">Login</a>
+      <a href="{% url 'cadastro'%}" class="active btn-nav btn-cadastro">Cadastro</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>Criar Conta</h1>
+  </div>
+</div>
+
+<div class="auth-main">
+  <div class="auth-card">
+
+    <div class="auth-card-header">
+      <div class="auth-icon"><img src="{% static 'img/Logo.jpeg' %}" alt="logo" width="100%" height="100%" ></div>
+      <h1>Cadastro MercadoNex</h1>
+      <p>Crie sua conta no sistema.</p>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Nome Completo <span class="required">*</span></label>
+        <input type="text" name="username"  placeholder="Nome de usuário" required>
+      </div>
+
+      <div class="form-group">
+        <label>E-mail <span class="required">*</span></label>
+        <input type="email" name="email" placeholder="Seu e-mail" required>
+      </div>
+
+      <div class="form-group">
+        <label>Senha <span class="required">*</span></label>
+        <input type="password" name="password" placeholder="senha"required>
+
+        <div class="pwd-strength">
+          <div class="pwd-strength-bar" id="strength-bar"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirmar Senha <span class="required">*</span></label>
+        <input type="password" name="confirmar" placeholder="Confirmar senha" required>
+      </div>
+
+      <button type="submit" class="btn-submit">
+        Criar Conta →
+      </button>
+
+      <div class="success-msg" id="cadastro-success"></div>
+
+      {% if erro %}
+      <div class="error-msg">
+          {{ erro }}
+      </div>
+      {% endif %}
+
+    </form>
+
+    <div class="auth-links">
+      <span>Já possui uma conta?</span>
+      <a href="{% url 'login'%}">Fazer login</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  © 2026 MercadoNex - Todos os direitos reservados.
+</footer>
+
+<!-- <script src="{% static 'js/cadastro.js' %} "></script> -->
+
+</body>
+</html>

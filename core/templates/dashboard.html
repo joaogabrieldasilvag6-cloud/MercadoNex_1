@@ -1,0 +1,18 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block conteudo %}
+
+
+{% include 'componentes/clientes.html' %}
+{% include 'componentes/vencimento_produtos.html' %}
+{% include 'componentes/relatorios.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/formulario.js' %}"></script>
+<script src="{% static 'js/cliente.js' %}"></script>
+<script src="{% static 'js/produtos.js' %}"></script>
+<script src="{% static 'js/vencimento.js' %}"></script>
+{% endblock %}

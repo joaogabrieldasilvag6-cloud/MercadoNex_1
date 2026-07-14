@@ -1,0 +1,260 @@
+
+
+<section class="produtos-page">
+
+
+    <div class="page-header">
+
+        <div class="page-header-info">
+            <h1>📦 Produtos</h1>
+            <p>
+                Gerencie todos os produtos cadastrados no MercadoNex.
+            </p>
+        </div>
+
+        <button
+            id="btnCadastrar"
+            class="btn-primary">
+            ＋ Novo Produto
+        </button>
+
+    </div>
+
+ 
+
+
+    <form method="GET" class="table-toolbar">
+
+    <input
+        type="text"
+        name="buscar"
+        class="search-input"
+        placeholder="🔍 Buscar Produto..."
+        value="{{ buscar|default:'' }}">
+
+    <select name="categoria" class="filter-select">
+
+        <option value="">Todas as categorias</option>
+
+        <option value="Alimentos">Alimentos</option>
+        <option value="Bebidas">Bebidas</option>
+        <option value="Higiene">Higiene</option>
+        <option value="Limpeza">Limpeza</option>
+        <option value="Padaria">Padaria</option>
+        <option value="Frios">Frios</option>
+        <option value="Hortifruti">Hortifruti</option>
+
+    </select>
+
+    <select name="status" class="filter-select">
+
+        <option value="">Todos</option>
+
+        <option value="ativo">Ativos</option>
+
+        <option value="inativo">Inativos</option>
+
+    </select>
+
+    <button class="btn-sm btn-primary" type="submit">
+        Filtrar
+    </button>
+
+    </form>
+
+
+
+    <div class="section-card">
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Imagem</th>
+
+                        <th>Produto</th>
+
+                        <th>Categoria</th>
+
+                        <th>Preço</th>
+
+                        <th>Estoque</th>
+
+                        <th>Status</th>
+
+                        <th>Ações</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="produtos-tbody">
+
+                    {% for produto in produtos %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="produto-img">
+
+                                📦
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            <div class="td-name">
+
+                                {{ produto.nome }}
+
+                                <span>
+
+                                    Código:
+                                    {{ produto.codigo }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge badge-info">
+
+                                {{ produto.categoria }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            R$ {{ produto.preco_venda }}
+
+                        </td>
+
+                        <td>
+
+                            {{ produto.quantidade }}
+
+                        </td>
+
+                        <td>
+
+                            {% if produto.status %}
+
+                                <span class="badge badge-success">
+
+                                    Ativo
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-danger">
+
+                                    Inativo
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="td-actions">
+
+                                <button
+                                    type="button"
+                                    class="btn-sm btn-outline-sm"
+                                    onclick="editarProduto({{ produto.id }})">
+
+                                    ✏
+
+                                </button>
+
+                                <a
+                                    href="{% url 'excluir_produto' produto.id %}"
+                                    class="btn-sm btn-danger-sm"
+                                    onclick="return confirm('Deseja remover este produto?')">
+
+                                    🗑
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="7">
+
+                            Nenhum produto cadastrado.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+<div class="pagination">
+
+    {% if produtos.has_previous %}
+        <a class="page-btn"
+           href="?page={{ produtos.previous_page_number }}">
+            ‹
+        </a>
+    {% endif %}
+
+    {% for pagina in produtos.paginator.page_range %}
+
+        {% if pagina == produtos.number %}
+
+            <span class="page-btn active">
+                {{ pagina }}
+            </span>
+
+        {% else %}
+
+            <a class="page-btn"
+               href="?page={{ pagina }}">
+                {{ pagina }}
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+    {% if produtos.has_next %}
+
+        <a class="page-btn"
+           href="?page={{ produtos.next_page_number }}">
+            ›
+        </a>
+
+    {% endif %}
+
+</div>

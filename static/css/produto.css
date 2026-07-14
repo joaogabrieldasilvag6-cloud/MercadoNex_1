@@ -1,0 +1,577 @@
+/* =======================================================
+   PÁGINA DE PRODUTOS
+======================================================= */
+
+.produtos-page{
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+    width:100%;
+}
+
+/* =======================================================
+   CABEÇALHO
+======================================================= */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+    padding:10px 0;
+}
+
+.page-header-info h1{
+    font-size:2rem;
+    color:#1F2937;
+    margin-bottom:8px;
+    font-weight:700;
+}
+
+.page-header-info p{
+    color:#6B7280;
+    font-size:15px;
+}
+
+/* =======================================================
+   BOTÃO NOVO PRODUTO
+======================================================= */
+
+.btn-primary{
+
+    border:none;
+
+    background:#2563EB;
+
+    color:#fff;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.btn-primary:hover{
+
+    background:#1D4ED8;
+
+    transform:translateY(-2px);
+
+}
+
+/* =======================================================
+   CARDS
+======================================================= */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+
+    gap:22px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.stat-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+    color:#fff;
+
+}
+
+.stat-icon.blue{
+
+    background:#2563EB;
+
+}
+
+.stat-icon.green{
+
+    background:#10B981;
+
+}
+
+.stat-icon.yellow{
+
+    background:#F59E0B;
+
+}
+
+.stat-icon.purple{
+
+    background:#8B5CF6;
+
+}
+
+.stat-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.stat-value{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.stat-label{
+
+    color:#6B7280;
+
+    font-size:14px;
+
+    margin-top:4px;
+
+}
+
+/* =======================================================
+   BARRA DE PESQUISA E FILTROS
+======================================================= */
+
+.table-toolbar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    flex-wrap:wrap;
+
+    background:#fff;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.search-input{
+
+    flex:1;
+
+    min-width:260px;
+
+    height:50px;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    padding:0 18px;
+
+    font-size:15px;
+
+    transition:.3s;
+
+    outline:none;
+
+}
+
+.search-input:focus{
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+.filter-select{
+
+    height:50px;
+
+    min-width:180px;
+
+    padding:0 15px;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    background:#fff;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+.filter-select:focus{
+
+    border-color:#2563EB;
+
+}
+
+/* =======================================================
+   TABELA
+======================================================= */
+
+.section-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.table-wrap{
+
+    overflow-x:auto;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#F8FAFC;
+
+}
+
+thead th{
+
+    padding:18px;
+
+    text-align:left;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#64748B;
+
+    text-transform:uppercase;
+
+    border-bottom:2px solid #E5E7EB;
+
+}
+
+tbody td{
+
+    padding:18px;
+
+    border-bottom:1px solid #EEF2F7;
+
+    vertical-align:middle;
+
+}
+
+tbody tr{
+
+    transition:.25s;
+
+}
+
+tbody tr:hover{
+
+    background:#F9FAFB;
+
+}
+
+/* =======================================================
+   IMAGEM DO PRODUTO
+======================================================= */
+
+.produto-img{
+
+    width:55px;
+
+    height:55px;
+
+    background:#F3F4F6;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+}
+
+/* =======================================================
+   NOME
+======================================================= */
+
+.td-name{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:5px;
+
+    font-weight:600;
+
+    color:#1F2937;
+
+}
+
+.td-name span{
+
+    font-size:13px;
+
+    color:#9CA3AF;
+
+    font-weight:500;
+
+}
+
+/* =======================================================
+   BADGES
+======================================================= */
+
+.badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:6px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.badge-info{
+
+    background:#DBEAFE;
+
+    color:#2563EB;
+
+}
+
+.badge-success{
+
+    background:#DCFCE7;
+
+    color:#16A34A;
+
+}
+
+.badge-danger{
+
+    background:#FEE2E2;
+
+    color:#DC2626;
+
+}
+
+/* =======================================================
+   AÇÕES
+======================================================= */
+
+.td-actions{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.btn-outline-sm{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#EFF6FF;
+
+    color:#2563EB;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-size:17px;
+
+}
+
+.btn-outline-sm:hover{
+
+    background:#2563EB;
+
+    color:#fff;
+
+}
+
+.btn-danger-sm{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+    background:#FEE2E2;
+
+    color:#DC2626;
+
+    transition:.25s;
+
+}
+
+.btn-danger-sm:hover{
+
+    background:#DC2626;
+
+    color:#fff;
+
+}
+
+/* =======================================================
+   PAGINAÇÃO
+======================================================= */
+
+.pagination{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:30px;
+
+}
+
+.page-btn{
+
+    min-width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#fff;
+
+    color:#374151;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.page-btn:hover{
+
+    background:#2563EB;
+
+    color:#fff;
+
+}
+
+.page-btn.active{
+
+    background:#2563EB;
+
+    color:#fff;
+
+}

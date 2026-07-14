@@ -1,0 +1,68 @@
+<div class="section-card">
+
+    <div class="section-card-header">
+        <h2>Datas de Vencimento de Produtos</h2>
+    </div>
+
+    <div class="section-card-body">
+
+        <div class="stats-grid">
+
+            <div class="stat-card card-vencimento" data-filtro="vencidos">
+                <div class="stat-icon red">📅</div>
+                <div class="stat-body">
+                    <div class="stat-value" id="total-vencidos">0</div>
+                    <div class="stat-label">Produtos Vencidos</div>
+                </div>
+            </div>
+
+            <div class="stat-card card-vencimento" data-filtro="7dias">
+                <div class="stat-icon yellow">⚠️</div>
+                <div class="stat-body">
+                    <div class="stat-value" id="total-7dias">0</div>
+                    <div class="stat-label">Vencendo em até 7 dias</div>
+                </div>
+            </div>
+
+            <div class="stat-card card-vencimento" data-filtro="30dias">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-body">
+                    <div class="stat-value" id="total-30dias">0</div>
+                    <div class="stat-label">Vencendo em até 30 dias</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="painel-vencimentos" class="painel-vencimentos">
+
+            <h3 id="titulo-lista">
+                Produtos
+            </h3>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Validade</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="lista-produtos-vencimento">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,215 @@
+<div class="section-card">
+
+  <div class="section-card-header">
+    <h2 id="Gestão_de_cliente">Gestão de Clientes</h2>
+    <div class="toolbar">
+      <input type="text" id="buscarCliente" class="search-input"
+        placeholder="🔍 Buscar cliente por nome, CPF ou telefone...">
+    </div>
+    <button id="btnNovoCliente" class="btn-sm btn-primary1">
+      Novo Cliente
+    </button>
+
+
+  </div>
+
+  <div class="section-card-body">
+
+
+    <div class="table-wrap">
+      <table>
+
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Saldo Devedor</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody id="clientes-tbody">
+
+          {% for cliente in clientes %}
+
+          <tr>
+
+            <td>{{ cliente.nome }}</td>
+
+            <td>{{ cliente.telefone }}</td>
+
+            <td>{{ cliente.email }}</td>
+
+            <td>
+              R$ {{ cliente.saldo_fiado }}
+            </td>
+
+            <td>
+
+              {% if cliente.ativo_fiado %}
+
+              <span class="badge badge-mec">
+                Ativo
+              </span>
+
+              {% else %}
+
+              <span class="badge badge-events">
+                Bloqueado
+              </span>
+
+              {% endif %}
+
+            </td>
+
+            <td>
+
+              <div class="td-actions">
+
+                <button type="button" class="btn-sm btn-outline-sm" onclick="editarCliente({{ cliente.id }})">
+                  ✏ Editar
+                </button>
+
+                <button type="button" class="btn-sm btn-danger-sm" onclick="removerCliente({{ cliente.id }})">
+                  🗑 Remover
+                </button>
+              </div>
+
+            </td>
+
+          </tr>
+
+          {% empty %}
+
+          <tr>
+
+            <td colspan="6" style="text-align:center;padding:20px;">
+              Nenhum cliente cadastrado.
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>
+<div class="modal" id="modalCliente">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h2>Novo Cliente</h2>
+
+      <button id="fecharModal">
+        ✖
+      </button>
+    </div>
+
+    <form id="cliente-form" method="POST" {% if cliente_edicao %} action="{% url 'editar_cliente' cliente_edicao.id %}"
+      {% else %} action="{% url 'cadastrar_cliente' %}" {% endif %}>
+
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Nome Completo *</label>
+
+        <input type="text" name="nome" placeholder="Digite o nome do cliente"
+          value="{{ cliente_edicao.nome|default:'' }}" required>
+
+      </div>
+
+      <div class="form-group">
+        <label>Telefone *</label>
+
+        <input type="text" name="telefone" placeholder="(84) 99999-9999"
+          value="{{ cliente_edicao.telefone|default:'' }}" required>
+
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+
+        <input type="email" name="email" placeholder="cliente@gmail.com" value="{{ cliente_edicao.email|default:'' }}">
+
+      </div>
+
+      <div class="form-group">
+        <label>CPF</label>
+
+        <input type="text" name="cpf" placeholder="000.000.000-00" value="{{ cliente_edicao.cpf|default:'' }}" required>
+
+      </div>
+
+      <div class="form-group">
+        <label>Endereço *</label>
+
+        <input type="text" name="endereco" placeholder="Rua, número, bairro..."
+          value="{{ cliente_edicao.endereco|default:'' }}" required>
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Limite de Fiado</label>
+
+        <input type="number" step="0.01" name="limite_fiado" placeholder="0.00"
+          value="{{ cliente_edicao.limite_fiado|default:'' }}">
+
+      </div>
+
+      <div class="form-group">
+
+        <label>Permitir compras no fiado</label>
+
+        <div class="toggle-row">
+
+          <label class="toggle">
+
+            <input type="checkbox" name="ativo_fiado" {% if cliente_edicao.ativo_fiado or not cliente_edicao %} checked
+              {% endif %}>
+
+            <span class="toggle-slider"></span>
+
+          </label>
+
+          <span class="toggle-label">
+            Cliente autorizado para compras no fiado
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button type="submit" class="btn-form-primary">
+
+          <i class="fa-solid fa-floppy-disk"></i>
+
+          {% if cliente_edicao %}
+          Atualizar Cliente
+          {% else %}
+          Salvar Cliente
+          {% endif %}
+
+        </button>
+
+        <button type="button" class="btn-form-secondary" id="cancelarModal">
+          Cancelar
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
