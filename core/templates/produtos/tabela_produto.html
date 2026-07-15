@@ -1,68 +1,124 @@
-
-
 <section class="produtos-page">
 
+    <!-- ========================================= -->
+    <!-- CABEÇALHO -->
+    <!-- ========================================= -->
 
     <div class="page-header">
 
         <div class="page-header-info">
+
             <h1>📦 Produtos</h1>
+
             <p>
                 Gerencie todos os produtos cadastrados no MercadoNex.
             </p>
+
         </div>
 
         <button
             id="btnCadastrar"
-            class="btn-primary">
-            ＋ Novo Produto
+            type="button">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Novo Produto
+
         </button>
 
     </div>
 
- 
 
+    <!-- ========================================= -->
+    <!-- FILTROS -->
+    <!-- ========================================= -->
 
     <form method="GET" class="table-toolbar">
 
-    <input
-        type="text"
-        name="buscar"
-        class="search-input"
-        placeholder="🔍 Buscar Produto..."
-        value="{{ buscar|default:'' }}">
+        <input
+            type="text"
+            name="buscar"
+            class="search-input"
+            placeholder="🔍 Buscar produto..."
+            value="{{ buscar|default:'' }}">
 
-    <select name="categoria" class="filter-select">
+        <select
+            name="categoria"
+            class="filter-select">
 
-        <option value="">Todas as categorias</option>
+            <option value="">Todas as categorias</option>
 
-        <option value="Alimentos">Alimentos</option>
-        <option value="Bebidas">Bebidas</option>
-        <option value="Higiene">Higiene</option>
-        <option value="Limpeza">Limpeza</option>
-        <option value="Padaria">Padaria</option>
-        <option value="Frios">Frios</option>
-        <option value="Hortifruti">Hortifruti</option>
+            <option value="Alimentos"
+                {% if categoria == "Alimentos" %}selected{% endif %}>
+                Alimentos
+            </option>
 
-    </select>
+            <option value="Bebidas"
+                {% if categoria == "Bebidas" %}selected{% endif %}>
+                Bebidas
+            </option>
 
-    <select name="status" class="filter-select">
+            <option value="Higiene"
+                {% if categoria == "Higiene" %}selected{% endif %}>
+                Higiene
+            </option>
 
-        <option value="">Todos</option>
+            <option value="Limpeza"
+                {% if categoria == "Limpeza" %}selected{% endif %}>
+                Limpeza
+            </option>
 
-        <option value="ativo">Ativos</option>
+            <option value="Padaria"
+                {% if categoria == "Padaria" %}selected{% endif %}>
+                Padaria
+            </option>
 
-        <option value="inativo">Inativos</option>
+            <option value="Frios"
+                {% if categoria == "Frios" %}selected{% endif %}>
+                Frios
+            </option>
 
-    </select>
+            <option value="Hortifruti"
+                {% if categoria == "Hortifruti" %}selected{% endif %}>
+                Hortifruti
+            </option>
 
-    <button class="btn-sm btn-primary" type="submit">
-        Filtrar
-    </button>
+        </select>
+
+
+        <select
+            name="status"
+            class="filter-select">
+
+            <option value="">Todos</option>
+
+            <option value="ativo"
+                {% if status == "ativo" %}selected{% endif %}>
+                Ativos
+            </option>
+
+            <option value="inativo"
+                {% if status == "inativo" %}selected{% endif %}>
+                Inativos
+            </option>
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn-primary">
+
+            Filtrar
+
+        </button>
 
     </form>
 
 
+    <!-- ========================================= -->
+    <!-- TABELA -->
+    <!-- ========================================= -->
 
     <div class="section-card">
 
@@ -75,17 +131,11 @@
                     <tr>
 
                         <th>Imagem</th>
-
                         <th>Produto</th>
-
                         <th>Categoria</th>
-
                         <th>Preço</th>
-
                         <th>Estoque</th>
-
                         <th>Status</th>
-
                         <th>Ações</th>
 
                     </tr>
@@ -100,11 +150,22 @@
 
                         <td>
 
-                            <div class="produto-img">
+                            {% if produto.imagem %}
 
-                                📦
+                                <img
+                                    src="{{ produto.imagem.url }}"
+                                    class="produto-img"
+                                    alt="{{ produto.nome }}">
 
-                            </div>
+                            {% else %}
+
+                                <div class="produto-img">
+
+                                    📦
+
+                                </div>
+
+                            {% endif %}
 
                         </td>
 
@@ -116,8 +177,7 @@
 
                                 <span>
 
-                                    Código:
-                                    {{ produto.codigo }}
+                                    Código: {{ produto.codigo }}
 
                                 </span>
 
@@ -175,19 +235,19 @@
 
                                 <button
                                     type="button"
-                                    class="btn-sm btn-outline-sm"
+                                    class="btn-outline-sm"
                                     onclick="editarProduto({{ produto.id }})">
 
-                                    ✏
+                                    <i class="fa-solid fa-pen"></i>
 
                                 </button>
 
                                 <a
                                     href="{% url 'excluir_produto' produto.id %}"
-                                    class="btn-sm btn-danger-sm"
+                                    class="btn-danger-sm"
                                     onclick="return confirm('Deseja remover este produto?')">
 
-                                    🗑
+                                    <i class="fa-solid fa-trash"></i>
 
                                 </a>
 
@@ -201,7 +261,7 @@
 
                     <tr>
 
-                        <td colspan="7">
+                        <td colspan="7" style="text-align:center;padding:40px;">
 
                             Nenhum produto cadastrado.
 
@@ -219,42 +279,67 @@
 
     </div>
 
-</section>
-<div class="pagination">
 
-    {% if produtos.has_previous %}
-        <a class="page-btn"
-           href="?page={{ produtos.previous_page_number }}">
-            ‹
-        </a>
-    {% endif %}
+    <!-- ========================================= -->
+    <!-- PAGINAÇÃO -->
+    <!-- ========================================= -->
 
-    {% for pagina in produtos.paginator.page_range %}
+    {% if produtos.has_other_pages %}
 
-        {% if pagina == produtos.number %}
+    <div class="pagination">
 
-            <span class="page-btn active">
-                {{ pagina }}
-            </span>
+        {% if produtos.has_previous %}
 
-        {% else %}
+            <a
+                class="page-btn"
+                href="?page={{ produtos.previous_page_number }}">
 
-            <a class="page-btn"
-               href="?page={{ pagina }}">
-                {{ pagina }}
+                <i class="fa-solid fa-chevron-left"></i>
+
             </a>
 
         {% endif %}
 
-    {% endfor %}
 
-    {% if produtos.has_next %}
+        {% for pagina in produtos.paginator.page_range %}
 
-        <a class="page-btn"
-           href="?page={{ produtos.next_page_number }}">
-            ›
-        </a>
+            {% if pagina == produtos.number %}
+
+                <span class="page-btn active">
+
+                    {{ pagina }}
+
+                </span>
+
+            {% else %}
+
+                <a
+                    class="page-btn"
+                    href="?page={{ pagina }}">
+
+                    {{ pagina }}
+
+                </a>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if produtos.has_next %}
+
+            <a
+                class="page-btn"
+                href="?page={{ produtos.next_page_number }}">
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+            </a>
+
+        {% endif %}
+
+    </div>
 
     {% endif %}
 
-</div>
+</section>

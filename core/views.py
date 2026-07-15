@@ -115,11 +115,64 @@ def produtos(request):
 
     produtos = Produto.objects.all().order_by("-id")
 
+    buscar = request.GET.get("buscar")
+
+    if buscar:
+        produtos = produtos.filter(
+            Q(nome__icontains=buscar) |
+            Q(codigo__icontains=buscar)
+        )
+
+    categoria = request.GET.get("categoria")
+
+    if categoria:
+        produtos = produtos.filter(categoria=categoria)
+
+    status = request.GET.get("status")
+
+    if status == "ativo":
+        produtos = produtos.filter(status=True)
+
+    elif status == "inativo":
+        produtos = produtos.filter(status=False)
+
+
+    total_produtos = Produto.objects.count()
+
+    produtos_ativos = Produto.objects.filter(
+        status=True
+    ).count()
+
+    estoque_baixo = Produto.objects.filter(
+        quantidade__lte=10
+    ).count()
+
+    produtos_destaque = Produto.objects.filter(
+        destaque=True
+    ).count()
+
+
+    paginator = Paginator(produtos, 10)
+    page = request.GET.get("page")
+    produtos = paginator.get_page(page)
     context = {
+
         "produtos": produtos,
+        "buscar": buscar,
+        "categoria": categoria,
+        "status": status,
+        "total_produtos": total_produtos,
+        "produtos_ativos": produtos_ativos,
+        "estoque_baixo": estoque_baixo,
+        "produtos_destaque": produtos_destaque,
+
     }
 
-    return render(request, "produtos/produtos.html", context)
+    return render(
+        request,
+        "produtos/produtos.html",
+        context
+    )
 
 @login_required
 def cadastrar_produto(request):
@@ -142,19 +195,20 @@ def cadastrar_produto(request):
         )
 
         messages.success(request, "Produto cadastrado com sucesso!")
-        return redirect("dashboard")
-    
-    return redirect("dashboard")
+        return redirect("produtos")
+
+    return redirect("produtos")
 
 
 @login_required
 def excluir_produto(request, id):
 
-    produto = Produto.objects.get(id=id)
+    produto = get_object_or_404(Produto, id=id)
     produto.delete()
+
     messages.success(request, "Produto removido com sucesso!")
 
-    return redirect("dashboard")
+    return redirect("produtos")
 
 
 @login_required
@@ -182,18 +236,20 @@ def editar_produto(request, id):
 
         messages.success(request, "Produto atualizado com sucesso!")
 
-        return redirect("dashboard")
+        return redirect("produtos")
 
-    produtos = Produto.objects.all()
+    produtos = Produto.objects.all().order_by("-id")
 
-    return render(
-        request,
-        "dashboard.html",
-        {
-            "produtos": produtos,
-            "produto_edicao": produto
-        }
-    )
+    context = {
+        "produtos": produtos,
+        "produto_edicao": produto,
+        "total_produtos": produtos.count(),
+        "produtos_ativos": produtos.filter(status=True).count(),
+        "estoque_baixo": produtos.filter(quantidade__lte=10).count(),
+        "produtos_destaque": produtos.filter(destaque=True).count(),
+    }
+
+    return render(request, "produtos/produtos.html", context)
 
 
 @login_required
@@ -216,7 +272,6 @@ def produto_json(request, id):
         "status": produto.status,
         "destaque": produto.destaque,
     })
-
 
 
 

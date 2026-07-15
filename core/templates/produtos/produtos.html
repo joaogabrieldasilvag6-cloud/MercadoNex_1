@@ -20,9 +20,11 @@ Produtos - MercadoNex
 </p>
 
 {% include "produtos/cards_produtos.html" %}
-
 {% include "produtos/tabela_produto.html" %}
 {% include "produtos/modal_produto.html" %}
 
+{% block scripts %}
+<script src="{% static 'js/produtos.js' %}"></script>
+{% endblock %}
 
 {% endblock %}

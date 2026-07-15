@@ -1,100 +1,100 @@
-/* =======================================================
-   PÁGINA DE PRODUTOS
-======================================================= */
+/* =====================================================
+   PRODUTOS
+===================================================== */
 
 .produtos-page{
     display:flex;
     flex-direction:column;
-    gap:30px;
+    gap:28px;
     width:100%;
 }
 
-/* =======================================================
-   CABEÇALHO
-======================================================= */
+/* =====================================================
+   HEADER
+===================================================== */
 
 .page-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:30px;
-    padding:10px 0;
+    gap:25px;
+    flex-wrap:wrap;
 }
 
 .page-header-info h1{
     font-size:2rem;
-    color:#1F2937;
-    margin-bottom:8px;
+    color:#1e293b;
     font-weight:700;
+    margin-bottom:6px;
 }
 
 .page-header-info p{
-    color:#6B7280;
+    color:#64748b;
     font-size:15px;
 }
 
-/* =======================================================
+/* =====================================================
    BOTÃO NOVO PRODUTO
-======================================================= */
+===================================================== */
 
-.btn-primary{
+#btnCadastrar{
 
-    border:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
 
-    background:#2563EB;
+    background:#1c8fdb;
 
     color:#fff;
 
-    padding:14px 22px;
+    border:none;
 
-    border-radius:12px;
+    border-radius:14px;
 
-    cursor:pointer;
+    padding:14px 28px;
 
     font-size:15px;
 
     font-weight:600;
 
-    transition:.3s;
-}
+    cursor:pointer;
 
-.btn-primary:hover{
+    transition:.25s;
 
-    background:#1D4ED8;
-
-    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(28,143,219,.20);
 
 }
 
-/* =======================================================
+#btnCadastrar:hover{
+
+    background:#1678bb;
+
+    transform:translateY(-3px);
+
+}
+
+#btnCadastrar:active{
+
+    transform:scale(.98);
+
+}
+
+#btnCadastrar i{
+
+    font-size:14px;
+
+}
+
+/* =====================================================
    CARDS
-======================================================= */
-
-.stats-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-
-    gap:22px;
-
-}
+===================================================== */
 
 .stat-card{
 
-    background:#fff;
+    position:relative;
 
-    border-radius:18px;
-
-    padding:22px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    overflow:hidden;
 
     transition:.25s;
 
@@ -102,269 +102,121 @@
 
 .stat-card:hover{
 
-    transform:translateY(-5px);
+    transform:translateY(-6px);
+
+}
+
+.stat-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:0;
+
+    width:100%;
+
+    height:4px;
+
+    background:#1c8fdb;
 
 }
 
 .stat-icon{
 
-    width:65px;
-
-    height:65px;
-
-    border-radius:16px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:28px;
-
-    color:#fff;
+    transition:.25s;
 
 }
 
-.stat-icon.blue{
+.stat-card:hover .stat-icon{
 
-    background:#2563EB;
-
-}
-
-.stat-icon.green{
-
-    background:#10B981;
-
-}
-
-.stat-icon.yellow{
-
-    background:#F59E0B;
-
-}
-
-.stat-icon.purple{
-
-    background:#8B5CF6;
-
-}
-
-.stat-body{
-
-    display:flex;
-
-    flex-direction:column;
+    transform:scale(1.08);
 
 }
 
 .stat-value{
 
-    font-size:28px;
+    font-size:32px;
 
     font-weight:700;
-
-    color:#111827;
 
 }
 
 .stat-label{
 
-    color:#6B7280;
-
     font-size:14px;
 
-    margin-top:4px;
+    color:#6b7280;
 
 }
 
-/* =======================================================
-   BARRA DE PESQUISA E FILTROS
-======================================================= */
+/* =====================================================
+   TOOLBAR
+===================================================== */
 
 .table-toolbar{
 
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    flex-wrap:wrap;
-
     background:#fff;
-
-    padding:18px;
 
     border-radius:16px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    padding:18px;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.06);
 
 }
 
-.search-input{
-
-    flex:1;
-
-    min-width:260px;
-
-    height:50px;
-
-    border:1px solid #E5E7EB;
-
-    border-radius:12px;
-
-    padding:0 18px;
-
-    font-size:15px;
-
-    transition:.3s;
-
-    outline:none;
-
-}
-
-.search-input:focus{
-
-    border-color:#2563EB;
-
-    box-shadow:0 0 0 3px rgba(37,99,235,.15);
-
-}
-
-.filter-select{
-
-    height:50px;
-
-    min-width:180px;
-
-    padding:0 15px;
-
-    border:1px solid #E5E7EB;
-
-    border-radius:12px;
-
-    background:#fff;
-
-    cursor:pointer;
-
-    font-size:15px;
-
-    outline:none;
-
-    transition:.3s;
-
-}
-
-.filter-select:focus{
-
-    border-color:#2563EB;
-
-}
-
-/* =======================================================
+/* =====================================================
    TABELA
-======================================================= */
+===================================================== */
 
 .section-card{
 
-    background:#fff;
-
     border-radius:18px;
-
-    overflow:hidden;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-}
-
-.table-wrap{
-
-    overflow-x:auto;
-
-}
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-}
-
-thead{
-
-    background:#F8FAFC;
-
-}
-
-thead th{
-
-    padding:18px;
-
-    text-align:left;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    color:#64748B;
-
-    text-transform:uppercase;
-
-    border-bottom:2px solid #E5E7EB;
-
-}
-
-tbody td{
-
-    padding:18px;
-
-    border-bottom:1px solid #EEF2F7;
-
-    vertical-align:middle;
 
 }
 
 tbody tr{
 
-    transition:.25s;
+    transition:.2s;
 
 }
 
 tbody tr:hover{
 
-    background:#F9FAFB;
+    transform:scale(1.003);
 
 }
 
-/* =======================================================
-   IMAGEM DO PRODUTO
-======================================================= */
+/* =====================================================
+   IMAGEM
+===================================================== */
 
 .produto-img{
 
-    width:55px;
+    width:56px;
 
-    height:55px;
+    height:56px;
 
-    background:#F3F4F6;
+    border-radius:14px;
 
-    border-radius:12px;
+    background:#eff6ff;
 
     display:flex;
 
-    align-items:center;
-
     justify-content:center;
+
+    align-items:center;
 
     font-size:24px;
 
 }
 
-/* =======================================================
+/* =====================================================
    NOME
-======================================================= */
+===================================================== */
 
 .td-name{
 
@@ -372,11 +224,7 @@ tbody tr:hover{
 
     flex-direction:column;
 
-    gap:5px;
-
-    font-weight:600;
-
-    color:#1F2937;
+    gap:4px;
 
 }
 
@@ -384,23 +232,15 @@ tbody tr:hover{
 
     font-size:13px;
 
-    color:#9CA3AF;
-
-    font-weight:500;
+    color:#9ca3af;
 
 }
 
-/* =======================================================
+/* =====================================================
    BADGES
-======================================================= */
+===================================================== */
 
 .badge{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
 
     padding:6px 14px;
 
@@ -408,37 +248,27 @@ tbody tr:hover{
 
     font-size:13px;
 
-    font-weight:600;
-
-}
-
-.badge-info{
-
-    background:#DBEAFE;
-
-    color:#2563EB;
-
 }
 
 .badge-success{
 
-    background:#DCFCE7;
+    background:#dcfce7;
 
-    color:#16A34A;
+    color:#15803d;
 
 }
 
 .badge-danger{
 
-    background:#FEE2E2;
+    background:#fee2e2;
 
-    color:#DC2626;
+    color:#dc2626;
 
 }
 
-/* =======================================================
-   AÇÕES
-======================================================= */
+/* =====================================================
+   BOTÕES DA TABELA
+===================================================== */
 
 .td-actions{
 
@@ -450,29 +280,27 @@ tbody tr:hover{
 
 .btn-outline-sm{
 
-    width:42px;
+    width:40px;
 
-    height:42px;
+    height:40px;
 
     border:none;
 
-    border-radius:10px;
+    border-radius:12px;
 
-    background:#EFF6FF;
+    background:#eff6ff;
 
-    color:#2563EB;
+    color:#1c8fdb;
 
     cursor:pointer;
 
     transition:.25s;
 
-    font-size:17px;
-
 }
 
 .btn-outline-sm:hover{
 
-    background:#2563EB;
+    background:#1c8fdb;
 
     color:#fff;
 
@@ -480,6 +308,190 @@ tbody tr:hover{
 
 .btn-danger-sm{
 
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+}
+
+.btn-danger-sm:hover{
+
+    transform:scale(1.05);
+
+}
+
+/* =====================================================
+   PAGINAÇÃO
+===================================================== */
+
+.pagination{
+
+    margin-top:25px;
+
+}
+
+/* =====================================================
+   RESPONSIVO
+===================================================== */
+
+@media(max-width:900px){
+
+.page-header{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+#btnCadastrar{
+
+    width:100%;
+
+}
+
+}
+
+/*==================================================
+MODAL DE PRODUTO
+==================================================*/
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(6px);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+
+    z-index:9999;
+
+}
+
+.modal.show{
+
+    display:flex;
+
+    animation:fadeModal .25s ease;
+
+}
+
+@keyframes fadeModal{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+.modal-content{
+
+    width:min(1100px,95vw);
+
+    max-height:92vh;
+
+    overflow-y:auto;
+
+    background:white;
+
+    border-radius:22px;
+
+    animation:modalScale .30s ease;
+
+    box-shadow:0 25px 70px rgba(0,0,0,.20);
+
+}
+
+@keyframes modalScale{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.95) translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+.modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    padding:30px;
+
+    border-bottom:1px solid #E5E7EB;
+
+    background:linear-gradient(
+        135deg,
+        #1c8fdb,
+        #2563eb
+    );
+
+    color:white;
+
+}
+
+.modal-header h2{
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.modal-subtitle{
+
+    margin-top:8px;
+
+    opacity:.9;
+
+    font-size:15px;
+
+}
+
+.fechar{
+
     width:42px;
 
     height:42px;
@@ -490,65 +502,167 @@ tbody tr:hover{
 
     justify-content:center;
 
-    text-decoration:none;
+    border-radius:12px;
 
-    border-radius:10px;
+    font-size:30px;
 
-    background:#FEE2E2;
-
-    color:#DC2626;
+    cursor:pointer;
 
     transition:.25s;
 
 }
 
-.btn-danger-sm:hover{
+.fechar:hover{
 
-    background:#DC2626;
-
-    color:#fff;
+    background:rgba(255,255,255,.15);
 
 }
 
-/* =======================================================
-   PAGINAÇÃO
-======================================================= */
+#product-form{
 
-.pagination{
+    padding:30px;
 
     display:flex;
 
-    justify-content:center;
+    flex-direction:column;
+
+    gap:25px;
+
+}
+
+.form-card{
+
+    background:#F8FAFC;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:18px;
+
+    padding:25px;
+
+}
+
+.form-card-title{
+
+    font-size:19px;
+
+    font-weight:700;
+
+    margin-bottom:22px;
+
+    color:#1e293b;
+
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+
+    height:52px;
+
+    border:1px solid #dbe2ea;
+
+    border-radius:12px;
+
+    padding:0 16px;
+
+    font-size:15px;
+
+    transition:.25s;
+
+    background:white;
+
+}
+
+.form-group textarea{
+
+    height:140px;
+
+    padding-top:15px;
+
+    resize:none;
+
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+
+    border-color:#1c8fdb;
+
+    box-shadow:0 0 0 4px rgba(28,143,219,.15);
+
+}
+
+.file-drop{
+
+    border:2px dashed #cbd5e1;
+
+    border-radius:18px;
+
+    padding:40px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    background:white;
+
+}
+
+.file-drop:hover{
+
+    border-color:#1c8fdb;
+
+    background:#eff6ff;
+
+}
+
+.upload-content{
+
+    display:flex;
+
+    flex-direction:column;
 
     align-items:center;
 
     gap:10px;
 
-    margin-top:30px;
+}
+
+.upload-icon{
+
+    font-size:45px;
 
 }
 
-.page-btn{
+.form-actions{
 
-    min-width:42px;
-
-    height:42px;
+    margin-top:10px;
 
     display:flex;
 
-    align-items:center;
+    justify-content:flex-end;
 
-    justify-content:center;
+    gap:15px;
+
+}
+
+.btn-form-primary{
+
+    background:#1c8fdb;
+
+    color:white;
 
     border:none;
 
-    border-radius:10px;
+    height:52px;
 
-    background:#fff;
+    padding:0 28px;
 
-    color:#374151;
+    border-radius:14px;
 
-    text-decoration:none;
+    font-size:15px;
 
     font-weight:600;
 
@@ -556,22 +670,22 @@ tbody tr:hover{
 
     transition:.25s;
 
-    box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.btn-form-primary:hover{
+
+    background:#1779bd;
 
 }
 
-.page-btn:hover{
+.btn-form-secondary{
 
-    background:#2563EB;
-
-    color:#fff;
-
-}
-
-.page-btn.active{
-
-    background:#2563EB;
-
-    color:#fff;
+    background:#EEF2F7;
+    border:none;
+    height:52px;
+    padding:0 28px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:600;
 
 }
