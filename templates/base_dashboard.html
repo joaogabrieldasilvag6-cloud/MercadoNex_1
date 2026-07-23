@@ -9,18 +9,17 @@
 
     <title>{% block titulo %}Dashboard - MercadoNex{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-
-    {% block estilos %}
-    {% endblock %}
-
+  {% block estilos %}
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  {% endblock %}
+   
     <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon/favicon-96x96.png' %}">
     <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon/favicon.svg' %}">
     <link rel="shortcut icon" href="{% static 'img/favicon/favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">
     <link rel="manifest" href="{% static 'img/favicon/site.webmanifest' %}">
 
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+   
     <script src="https://kit.fontawesome.com/4b3fbb326a.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet"
@@ -57,7 +56,7 @@
         Gestão de Produtos
       </a>
 
-      <a href="#Gestão_de_cliente" class="nav-item">
+     <a href="{% url 'clientes' %}" class="nav-item">
         <span class="nav-icon"><i class="fa-solid fa-users" style="color: #2DD4BF;"></i></span>
         Gestão de Clientes
       </a>

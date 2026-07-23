@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db import IntegrityError
 from django.views.decorators.http import require_POST
-
+from django.db.models import Sum
 
 
 
@@ -274,6 +274,27 @@ def produto_json(request, id):
     })
 
 
+@login_required
+def clientes(request):
+
+    clientes = Cliente.objects.all().order_by("-id")
+
+    clientes_ativos = clientes.filter(ativo_fiado=True).count()
+
+    clientes_bloqueados = clientes.filter(ativo_fiado=False).count()
+
+    total_fiado = clientes.aggregate(
+        total=Sum("saldo_fiado")
+    )["total"] or 0
+
+    context = {
+        "clientes": clientes,
+        "clientes_ativos": clientes_ativos,
+        "clientes_bloqueados": clientes_bloqueados,
+        "total_fiado": total_fiado,
+    }
+
+    return render(request, "clientes/clientes.html", context)
 
 @login_required
 def cadastrar_cliente(request):

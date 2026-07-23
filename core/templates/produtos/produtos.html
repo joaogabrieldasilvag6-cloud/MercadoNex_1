@@ -6,7 +6,8 @@ Produtos - MercadoNex
 {% endblock %}
 
 {% block estilos %}
-<link rel="stylesheet" href="{% static 'css/produtos.css' %}">
+<link rel="stylesheet" href="{% static 'css/produto.css' %}">
+ <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 {% block conteudo %}
@@ -24,6 +25,8 @@ Produtos - MercadoNex
 {% include "produtos/modal_produto.html" %}
 
 {% block scripts %}
+{{ block.super }}
+
 <script src="{% static 'js/produtos.js' %}"></script>
 {% endblock %}
 

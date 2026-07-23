@@ -2,16 +2,20 @@ const modal = document.getElementById("modalProduto");
 const btn = document.getElementById("btnCadastrar");
 const fecharProduto = document.querySelector(".fechar");
 
-btn.onclick = () => {
-    modal.style.display = "flex";
-};
+if (modal && btn && fecharProduto) {
 
-fecharProduto.onclick = () => {
-    modal.style.display = "none";
-};
+    btn.onclick = () => {
+        modal.style.display = "flex";
+    };
 
-window.onclick = (e) => {
-    if (e.target === modal) {
+    fecharProduto.onclick = () => {
         modal.style.display = "none";
-    }
-};
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+
+}

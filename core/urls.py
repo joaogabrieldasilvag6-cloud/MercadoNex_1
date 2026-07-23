@@ -16,6 +16,7 @@ urlpatterns = [
     path("produtos/editar/<int:id>/", editar_produto, name="editar_produto"),
     path("produtos/json/<int:id>/", produto_json, name="produto_json" ),
 
+    path("clientes/", clientes, name="clientes"),
     path("clientes/cadastrar/", cadastrar_cliente, name="cadastrar_cliente"),
     path("clientes/excluir/<int:id>/", excluir_cliente, name="excluir_cliente"),
     path("clientes/editar/<int:id>/", editar_cliente, name="editar_cliente"),

@@ -1,34 +1,60 @@
-// ===============================
-// MODAL DE CLIENTES
-// ===============================
+// =====================================================
+// MERCADONEX
+// GESTÃO DE CLIENTES
+// =====================================================
+
+
+// =====================================================
+// ELEMENTOS
+// =====================================================
 
 const modalCliente = document.getElementById("modalCliente");
-const btnNovoCliente = document.getElementById("btnNovoCliente");
-const fecharCliente = document.getElementById("fecharModal");
-const cancelarModal = document.getElementById("cancelarModal");
+
 const clienteForm = document.getElementById("cliente-form");
 
-// ===============================
+const btnNovoCliente = document.getElementById("btnNovoCliente");
+
+const btnFecharModal = document.getElementById("fecharModal");
+
+const btnCancelarModal = document.getElementById("cancelarModal");
+
+const tituloModal = document.getElementById("tituloModalCliente");
+
+const btnSalvar = document.querySelector(".btn-salvar");
+
+const tabelaClientes = document.getElementById("clientes-tbody");
+
+const campoBusca = document.getElementById("buscarCliente");
+
+
+// =====================================================
 // ABRIR MODAL
-// ===============================
+// =====================================================
 
-if (btnNovoCliente) {
+function abrirModalCliente() {
 
-    btnNovoCliente.addEventListener("click", () => {
+    clienteForm.reset();
 
-        clienteForm.reset();
+    clienteForm.action = "/clientes/cadastrar/";
 
-        clienteForm.action = "/clientes/cadastrar/";
+    tituloModal.innerHTML = `
+        <i class="fa-solid fa-user-plus"></i>
+        Novo Cliente
+    `;
 
-        modalCliente.classList.add("show");
+    btnSalvar.innerHTML = `
+        <i class="fa-solid fa-floppy-disk"></i>
+        Salvar Cliente
+    `;
 
-    });
+    modalCliente.classList.add("show");
 
 }
 
-// ===============================
+
+// =====================================================
 // FECHAR MODAL
-// ===============================
+// =====================================================
 
 function fecharModalCliente() {
 
@@ -36,96 +62,138 @@ function fecharModalCliente() {
 
     clienteForm.reset();
 
+    clienteForm.action = "/clientes/cadastrar/";
+
 }
 
-if (fecharCliente) {
-    fecharCliente.addEventListener("click", fecharModalCliente);
+
+// =====================================================
+// EVENTOS
+// =====================================================
+
+if(btnNovoCliente){
+
+    btnNovoCliente.addEventListener("click", abrirModalCliente);
+
 }
 
-if (cancelarModal) {
-    cancelarModal.addEventListener("click", fecharModalCliente);
+if(btnFecharModal){
+
+    btnFecharModal.addEventListener("click", fecharModalCliente);
+
 }
 
-window.addEventListener("click", function (e) {
+if(btnCancelarModal){
 
-    if (e.target === modalCliente) {
+    btnCancelarModal.addEventListener("click", fecharModalCliente);
+
+}
+
+window.addEventListener("click",(e)=>{
+
+    if(e.target === modalCliente){
+
         fecharModalCliente();
+
     }
 
 });
 
-// ===============================
+
+// =====================================================
 // EDITAR CLIENTE
-// ===============================
+// =====================================================
 
-async function editarCliente(id) {
+async function editarCliente(id){
 
-    const form = document.getElementById("cliente-form");
+    try{
 
-    // Abre modal
-    modalCliente.classList.add("show");
+        const resposta = await fetch(`/clientes/json/${id}/`);
 
-    // Define action de edição
-    form.action = `/clientes/editar/${id}/`;
+        const cliente = await resposta.json();
 
-    // Busca dados do cliente
-    const response = await fetch(`/clientes/json/${id}/`);
-    const cliente = await response.json();
+        clienteForm.action = `/clientes/editar/${id}/`;
 
-    // Preenche formulário
-    form.nome.value = cliente.nome;
-    form.telefone.value = cliente.telefone;
-    form.email.value = cliente.email;
-    form.cpf.value = cliente.cpf;
-    form.endereco.value = cliente.endereco;
-    form.limite_fiado.value = cliente.limite_fiado;
-    form.ativo_fiado.checked = cliente.ativo_fiado;
+        tituloModal.innerHTML = `
+            <i class="fa-solid fa-user-pen"></i>
+            Editar Cliente
+        `;
+
+        btnSalvar.innerHTML = `
+            <i class="fa-solid fa-floppy-disk"></i>
+            Atualizar Cliente
+        `;
+
+        clienteForm.nome.value = cliente.nome;
+        clienteForm.telefone.value = cliente.telefone;
+        clienteForm.email.value = cliente.email;
+        clienteForm.cpf.value = cliente.cpf;
+        clienteForm.endereco.value = cliente.endereco;
+        clienteForm.limite_fiado.value = cliente.limite_fiado;
+        clienteForm.ativo_fiado.checked = cliente.ativo_fiado;
+
+        modalCliente.classList.add("show");
+
+    }
+
+    catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao carregar os dados do cliente.");
+
+    }
 
 }
 
-// ===============================
-// SALVAR CLIENTE (AJAX)
-// ===============================
 
-clienteForm.addEventListener("submit", async function (e) {
+// =====================================================
+// SALVAR CLIENTE
+// =====================================================
+
+clienteForm.addEventListener("submit", async function(e){
 
     e.preventDefault();
 
     const formData = new FormData(clienteForm);
 
-    try {
+    try{
 
-        const resposta = await fetch(clienteForm.action, {
+        const resposta = await fetch(clienteForm.action,{
 
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-Requested-With": "XMLHttpRequest"
+            method:"POST",
+
+            body:formData,
+
+            headers:{
+                "X-Requested-With":"XMLHttpRequest"
             }
 
         });
 
         const dados = await resposta.json();
 
-         if (dados.success) {
-
-            alert("✅ Cliente salvo com sucesso!");
+        if(dados.success){
 
             fecharModalCliente();
 
             atualizarLinhaCliente(dados.cliente);
 
-
-        } else {
-
-            alert(dados.erro);
-
+            alert("Cliente salvo com sucesso!");
 
         }
 
-    } catch (erro) {
+        else{
 
-        console.error("Erro:", erro);
+            alert(dados.erro);
+
+        }
+
+    }
+
+    catch(erro){
+
+        console.error(erro);
 
         alert("Erro na comunicação com o servidor.");
 
@@ -133,43 +201,56 @@ clienteForm.addEventListener("submit", async function (e) {
 
 });
 
+
+// =====================================================
+// ATUALIZAR TABELA
+// =====================================================
+
 function atualizarLinhaCliente(cliente){
 
-    const linhas = document.querySelectorAll("#clientes-tbody tr");
+    let encontrou = false;
 
-    linhas.forEach(linha => {
+    document.querySelectorAll("#clientes-tbody tr").forEach(linha=>{
 
-        const botaoEditar = linha.querySelector(".btn-outline-sm");
+        const botao = linha.querySelector(".btn-editar");
 
-        if(!botaoEditar) return;
+        if(!botao) return;
 
-        const onclick = botaoEditar.getAttribute("onclick");
+        if(!botao.getAttribute("onclick").includes(`(${cliente.id})`)) return;
 
-        if(onclick.includes(`(${cliente.id})`)){
+        encontrou = true;
 
-            linha.children[0].textContent = cliente.nome;
-            linha.children[1].textContent = cliente.telefone;
-            linha.children[2].textContent = cliente.email;
-            linha.children[3].textContent = "R$ " + Number(cliente.saldo).toFixed(2);
+        linha.children[0].innerHTML = `<strong>${cliente.nome}</strong>`;
 
-            linha.children[4].innerHTML = cliente.ativo_fiado
-                ? '<span class="badge badge-mec">Ativo</span>'
-                : '<span class="badge badge-events">Bloqueado</span>';
-        }
+        linha.children[1].textContent = cliente.telefone;
+
+        linha.children[2].textContent = cliente.email;
+
+        linha.children[3].textContent =
+            "R$ " + Number(cliente.saldo).toFixed(2);
+
+        linha.children[4].innerHTML = cliente.ativo_fiado
+            ? '<span class="badge badge-success">Ativo</span>'
+            : '<span class="badge badge-danger">Bloqueado</span>';
 
     });
 
+    if(!encontrou){
+
+        location.reload();
+
+    }
+
 }
+
+
+// =====================================================
+// REMOVER CLIENTE
+// =====================================================
 
 async function removerCliente(id){
 
-    const confirmar = confirm(
-        "Deseja remover este cliente?"
-    );
-
-    if(!confirmar){
-        return;
-    }
+    if(!confirm("Deseja remover este cliente?")) return;
 
     try{
 
@@ -179,13 +260,9 @@ async function removerCliente(id){
 
         if(dados.success){
 
-            const linhas =
-            document.querySelectorAll("#clientes-tbody tr");
+            document.querySelectorAll("#clientes-tbody tr").forEach(linha=>{
 
-            linhas.forEach(linha=>{
-
-                const botao =
-                linha.querySelector(".btn-danger-sm");
+                const botao = linha.querySelector(".btn-excluir");
 
                 if(!botao) return;
 
@@ -197,11 +274,19 @@ async function removerCliente(id){
 
             });
 
-            alert("✅ Cliente removido!");
+            alert("Cliente removido com sucesso!");
 
         }
 
-    }catch(erro){
+        else{
+
+            alert(dados.erro);
+
+        }
+
+    }
+
+    catch(erro){
 
         console.error(erro);
 
@@ -211,33 +296,33 @@ async function removerCliente(id){
 
 }
 
-const campoBusca = document.getElementById("buscarCliente");
 
-if (campoBusca) {
+// =====================================================
+// BUSCA
+// =====================================================
 
-    campoBusca.addEventListener("input", function () {
+if(campoBusca){
+
+    campoBusca.addEventListener("input",function(){
 
         const valor = this.value.toLowerCase();
 
-        const linhas = document.querySelectorAll("#clientes-tbody tr");
+        document.querySelectorAll("#clientes-tbody tr").forEach(linha=>{
 
-        linhas.forEach(linha => {
-
-            const texto = linha.textContent.toLowerCase();
-
-            if (texto.includes(valor)) {
-
-                linha.style.display = "";
-
-            } else {
-
-                linha.style.display = "none";
-
-            }
+            linha.style.display =
+                linha.textContent.toLowerCase().includes(valor)
+                ? ""
+                : "none";
 
         });
 
     });
 
 }
-console.log("JS CLIENTES CARREGADO");
+
+
+// =====================================================
+// INICIALIZAÇÃO
+// =====================================================
+
+console.log("✔ MercadoNex | Gestão de Clientes carregada.");

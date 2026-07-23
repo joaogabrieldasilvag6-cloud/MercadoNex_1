@@ -1,0 +1,890 @@
+/* ==========================================================
+   MERCADONEX
+   GESTÃO DE CLIENTES
+========================================================== */
+
+:root{
+
+    --azul:#2196F3;
+    --azul-hover:#1976D2;
+
+    --verde:#10B981;
+    --verde-bg:#DCFCE7;
+
+    --vermelho:#EF4444;
+    --vermelho-bg:#FEE2E2;
+
+    --cinza:#64748B;
+    --borda:#E5E7EB;
+
+    --bg:#F6F8FC;
+    --card:#FFFFFF;
+
+    --shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.clientes-page{
+
+    display:flex;
+    flex-direction:column;
+    gap:30px;
+
+}
+
+/*=========================================
+HEADER
+=========================================*/
+
+.clientes-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.clientes-header h1{
+
+    font-size:34px;
+
+    color:#1F2937;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.clientes-header h1 i{
+
+    color:#2563EB;
+
+}
+
+.clientes-header p{
+
+    margin-top:8px;
+
+    color:#6B7280;
+
+    font-size:15px;
+
+}
+
+.btn-novo-cliente{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:15px 28px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+    color:#fff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
+}
+
+.btn-novo-cliente:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 18px 35px rgba(37,99,235,.35);
+
+}
+
+/* ======================================
+   BOTÃO
+====================================== */
+
+.btn-novo-cliente{
+
+    border:none;
+
+    background:linear-gradient(
+        135deg,
+        var(--azul),
+        #42A5F5
+    );
+
+    color:white;
+
+    padding:18px 28px;
+
+    border-radius:15px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    box-shadow:0 10px 20px rgba(33,150,243,.25);
+
+}
+
+.btn-novo-cliente:hover{
+
+    transform:translateY(-3px);
+
+    background:linear-gradient(
+        135deg,
+        var(--azul-hover),
+        var(--azul)
+    );
+
+}
+/* ==========================================
+   CARDS SUPERIORES
+========================================== */
+
+.clientes-cards{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:22px;
+    margin-bottom:35px;
+
+}
+
+.cliente-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.cliente-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.12);
+
+}
+
+.card-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#fff;
+
+    font-size:26px;
+
+}
+
+.card-icon.blue{
+
+    background:#3B82F6;
+
+}
+
+.card-icon.green{
+
+    background:#10B981;
+
+}
+
+.card-icon.red{
+
+    background:#EF4444;
+
+}
+
+.card-icon.orange{
+
+    background:#F59E0B;
+
+}
+
+.card-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.card-info span{
+
+    color:#64748B;
+
+    font-size:14px;
+
+}
+
+.card-info h2{
+
+    margin-top:5px;
+
+    font-size:30px;
+
+    color:#111827;
+
+}
+
+/* ======================================
+   TOOLBAR
+====================================== */
+
+.clientes-toolbar{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    align-items:center;
+
+}
+
+.search-box{
+
+    width:380px;
+
+    max-width:100%;
+
+    background:white;
+
+    border:1px solid var(--borda);
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:0 18px;
+
+    transition:.25s;
+
+}
+
+.search-box:focus-within{
+
+    border-color:var(--azul);
+
+    box-shadow:0 0 0 4px rgba(33,150,243,.10);
+
+}
+
+.search-box i{
+
+    color:#94A3B8;
+
+    font-size:17px;
+
+}
+
+.search-box input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    padding:16px 15px;
+
+    font-size:16px;
+
+    background:transparent;
+
+}
+
+/* ======================================
+   TABELA
+====================================== */
+
+.clientes-table{
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:var(--shadow);
+
+    border:1px solid #EEF2F7;
+
+}
+
+.clientes-table table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.clientes-table thead{
+
+    background:#F8FAFC;
+
+}
+
+.clientes-table thead th{
+
+    padding:22px;
+
+    text-align:left;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    color:#64748B;
+
+    border-bottom:2px solid #E5E7EB;
+
+}
+
+.clientes-table tbody td{
+
+    padding:22px;
+
+    border-bottom:1px solid #F1F5F9;
+
+    font-size:16px;
+
+    color:#1E293B;
+
+}
+
+.clientes-table tbody tr{
+
+    transition:.25s;
+
+}
+
+.clientes-table tbody tr:hover{
+
+    background:#F8FAFC;
+
+}
+
+.sem-registros{
+
+    text-align:center;
+
+    padding:45px !important;
+
+    color:#94A3B8;
+
+}
+
+/* ==========================================================
+   MODAL CLIENTE
+========================================================== */
+
+.modal{
+
+    position:fixed;
+    inset:0;
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+
+    padding:30px;
+
+    background:rgba(15,23,42,.55);
+
+    backdrop-filter:blur(5px);
+
+    z-index:9999;
+
+}
+
+.modal.show{
+
+    display:flex;
+
+}
+
+.modal-cliente{
+
+    width:100%;
+    max-width:900px;
+
+    max-height:90vh;
+
+    display:flex;
+    flex-direction:column;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:0 30px 70px rgba(0,0,0,.25);
+
+    animation:modalShow .25s ease;
+
+}
+
+/* ======================================
+   HEADER
+====================================== */
+
+.modal-cliente-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:28px 35px;
+
+    background:linear-gradient(
+        135deg,
+        #2563EB,
+        #1D4ED8
+    );
+
+    color:#fff;
+
+}
+
+.modal-body{
+
+    flex:1;
+
+    overflow-y:auto;
+
+}
+
+.modal-cliente-header h2{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    font-size:28px;
+
+}
+
+.modal-cliente-header p{
+
+    margin-top:8px;
+
+    color:rgba(255,255,255,.85);
+
+}
+
+.btn-fechar{
+
+    width:45px;
+    height:45px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.15);
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:20px;
+
+    transition:.25s;
+
+}
+
+.btn-fechar:hover{
+
+    background:#EF4444;
+
+    transform:rotate(90deg);
+
+}
+
+/* ======================================
+   FORMULÁRIO
+====================================== */
+
+#cliente-form{
+
+    padding:30px 35px;
+
+}
+
+.form-section{
+
+    margin-bottom:35px;
+
+}
+
+.form-section h3{
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:20px;
+
+    color:#1F2937;
+
+    margin-bottom:20px;
+
+    padding-bottom:12px;
+
+    border-bottom:1px solid #E5E7EB;
+
+}
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.form-group.full{
+
+    grid-column:1 / -1;
+
+}
+
+.form-group label{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+.form-group input{
+
+    height:50px;
+
+    padding:0 16px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    transition:.25s;
+
+}
+
+.form-group input:focus{
+
+    outline:none;
+
+    border-color:#2563EB;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+/* ======================================
+   SWITCH
+====================================== */
+
+.switch{
+
+    position:relative;
+
+    width:55px;
+
+    height:30px;
+
+    display:inline-block;
+
+}
+
+.switch input{
+
+    display:none;
+
+}
+
+.slider{
+
+    position:absolute;
+
+    inset:0;
+
+    background:#CBD5E1;
+
+    border-radius:50px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.slider::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:24px;
+    height:24px;
+
+    left:3px;
+    top:3px;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    transition:.25s;
+
+}
+
+.switch input:checked + .slider{
+
+    background:#10B981;
+
+}
+
+.switch input:checked + .slider::before{
+
+    transform:translateX(25px);
+
+}
+
+/* ======================================
+   RODAPÉ
+====================================== */
+
+.modal-footer{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:15px;
+
+    margin-top:10px;
+
+    padding-top:25px;
+
+    border-top:1px solid #E5E7EB;
+
+}
+
+.btn-cancelar{
+
+    padding:14px 24px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#F1F5F9;
+
+    color:#475569;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+.btn-cancelar:hover{
+
+    background:#E2E8F0;
+
+}
+
+.btn-salvar{
+
+    padding:14px 28px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        #2563EB,
+        #1D4ED8
+    );
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    transition:.25s;
+
+}
+
+.btn-salvar:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 12px 25px rgba(37,99,235,.25);
+
+}
+
+/* ======================================
+   ANIMAÇÃO
+====================================== */
+
+@keyframes modalShow{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px) scale(.97);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0) scale(1);
+
+    }
+
+}
+
+/* ======================================
+   RESPONSIVO
+====================================== */
+
+@media(max-width:768px){
+
+    .modal{
+
+        padding:15px;
+
+    }
+
+    .modal-cliente{
+
+        max-height:95vh;
+
+        overflow-y:auto;
+
+    }
+
+    #cliente-form{
+
+        padding:25px;
+
+    }
+
+    .modal-cliente-header{
+
+        padding:22px;
+
+    }
+
+    .modal-cliente-header h2{
+
+        font-size:22px;
+
+    }
+
+    .form-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .modal-footer{
+
+        flex-direction:column-reverse;
+
+    }
+
+    .btn-cancelar,
+    .btn-salvar{
+
+        width:100%;
+
+        justify-content:center;
+
+    }
+
+}
