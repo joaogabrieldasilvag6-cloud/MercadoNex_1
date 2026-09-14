@@ -1,44 +1,120 @@
+/* =========================================
+   PARTÍCULAS
+========================================= */
 
-const cadastroForm = document.getElementById("cadastroForm");
-const senhaInput = document.getElementById("cad-senha");
-const confirmarSenha = document.getElementById("confirmar-senha");
-const strengthBar = document.getElementById("strength-bar");
-const successCadastro = document.getElementById("cadastro-success");
+const particlesContainer =
+    document.getElementById("particles");
 
-senhaInput.addEventListener("input", () => {
-  const senha = senhaInput.value;
-  let strength = 0;
+const quantidadeParticulas = 32;
 
-  if(senha.length >= 4) strength += 25;
-  if(senha.length >= 6) strength += 25;
-  if(/[A-Z]/.test(senha)) strength += 25;
-  if(/[0-9]/.test(senha)) strength += 25;
+for (let i = 0; i < quantidadeParticulas; i++) {
 
-  strengthBar.style.width = strength + "%";
+    const particle = document.createElement("span");
 
-  if(strength <= 25){
-    strengthBar.style.background = "red";
-  } else if(strength <= 50){
-    strengthBar.style.background = "orange";
-  } else if(strength <= 75){
-    strengthBar.style.background = "gold";
-  } else {
-    strengthBar.style.background = "green";
-  }
-});
+    particle.classList.add("particle");
 
-cadastroForm.addEventListener("submit", function(event){
-  event.preventDefault();
+    const tamanho = Math.random() * 3 + 1;
 
-  if(senhaInput.value !== confirmarSenha.value){
-    alert("As senhas não coincidem!");
-    return;
-  }
+    particle.style.width = `${tamanho}px`;
+    particle.style.height = `${tamanho}px`;
+    particle.style.left = `${Math.random() * 100}%`;
 
-  successCadastro.classList.add("show");
-  successCadastro.innerHTML = "✅ Conta criada com sucesso!";
+    particle.style.animationDuration =
+        `${Math.random() * 8 + 7}s`;
 
-  setTimeout(() => {
-    window.location.href = "/login/";
-}, 2000);
-});
+    particle.style.animationDelay =
+        `${Math.random() * 8}s`;
+
+    particlesContainer.appendChild(particle);
+}
+
+
+
+
+/* =========================================
+   FORMULÁRIO DE CADASTRO
+========================================= 
+
+const cadastroForm =
+    document.getElementById("cadastroForm");
+
+if (cadastroForm) {
+
+    cadastroForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+            const senha =
+                document.getElementById("senha").value;
+
+            const confirmarSenha =
+                document.getElementById("confirmarSenha").value;
+
+
+            if (senha !== confirmarSenha) {
+
+                alert(
+                    "As senhas não são iguais."
+                );
+
+                return;
+            }
+
+
+            alert(
+                "Cadastro realizado com sucesso!"
+            );
+
+        }
+    );
+
+
+     =====================================
+       MÁSCARA DE TELEFONE
+    ====================================== 
+
+    const telefone =
+        document.getElementById("telefone");
+
+    if (telefone) {
+
+        telefone.addEventListener(
+            "input",
+            function () {
+
+                let valor =
+                    telefone.value.replace(/\D/g, "");
+
+                valor =
+                    valor.substring(0, 11);
+
+
+                if (valor.length <= 10) {
+
+                    valor =
+                        valor.replace(
+                            /^(\d{2})(\d{4})(\d{0,4}).(obs: tirar essa pate e colocar essa (* / ),
+                            "($1) $2-$3"
+                        );
+
+                } else {
+
+                    valor =
+                        valor.replace(
+                            /^(\d{2})(\d{5})(\d{0,4}).(obs: tirar essa pate e colocar essa (* / ),
+                            "($1) $2-$3"
+                        );
+
+                }
+
+                telefone.value = valor;
+
+            }
+        );
+
+    }
+
+}
+*/

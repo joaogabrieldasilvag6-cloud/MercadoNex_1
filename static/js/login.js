@@ -1,29 +1,84 @@
-const loginForm = document.getElementById("loginForm");
-const successMsg = document.getElementById("login-success");
+/* =========================================
+   PARTÍCULAS
+========================================= */
 
-loginForm.addEventListener("submit", function(event) {
-  event.preventDefault();
+const particlesContainer =
+    document.getElementById("particles");
 
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
 
-  if(email === "" || senha === ""){
-    alert("Preencha todos os campos!");
-    return;
-  }
+const quantidadeParticulas = 32;
 
-  // Dados do usuário
-  const usuario = {
-    email: email
-  };
 
-  // Salva no navegador
-  localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+for (
+    let i = 0;
+    i < quantidadeParticulas;
+    i++
+) {
 
-  successMsg.classList.add("show");
-  successMsg.innerHTML = "✅ Login realizado com sucesso!";
+    const particle =
+        document.createElement("span");
 
-  setTimeout(() => {
-    window.location.href = "/dashboard/";
-  }, 1500);
-});
+
+    particle.classList.add("particle");
+
+
+    /* Tamanho aleatório */
+
+    const tamanho =
+        Math.random() * 3 + 1;
+
+
+    particle.style.width =
+        `${tamanho}px`;
+
+
+    particle.style.height =
+        `${tamanho}px`;
+
+
+    /* Posição horizontal */
+
+    particle.style.left =
+        `${Math.random() * 100}%`;
+
+
+    /* Velocidade */
+
+    particle.style.animationDuration =
+        `${Math.random() * 8 + 7}s`;
+
+
+    /* Atraso */
+
+    particle.style.animationDelay =
+        `${Math.random() * 8}s`;
+
+
+    particlesContainer.appendChild(
+        particle
+    );
+
+}
+
+
+/* =========================================
+   FORMULÁRIO
+========================================= 
+
+const loginForm =
+    document.getElementById("loginForm");
+
+
+loginForm.addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+        console.log(
+            "Login enviado!"
+        );
+
+    }
+);
+*/
