@@ -1,0 +1,976 @@
+{% extends "base_dashboard.html" %}
+
+{% load static %}
+
+
+{% block titulo %}
+Dashboard - MercadoNex
+{% endblock %}
+
+
+{% block cabecalho %}
+
+<div class="page-heading" id="pageHeading">
+
+    <h1 id="pageTitle">
+        Painel Inicial
+    </h1>
+
+    <p id="pageSubtitle">
+        Visão geral do seu mercadinho
+    </p>
+
+</div>
+
+{% endblock %}
+
+
+{% block conteudo %}
+
+<section class="dashboard-home">
+
+    <!-- =====================================================
+         CABEÇALHO DO PAINEL
+    ====================================================== -->
+
+    <div class="section-intro">
+
+        <div>
+
+            <span class="eyebrow">
+                RESUMO
+            </span>
+
+            <h2>
+                Visão geral
+            </h2>
+
+            <p>
+                Acompanhe os principais indicadores do seu mercadinho.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'produtos' %}"
+            class="primary-button">
+
+            <i class="fa-solid fa-box"></i>
+
+            Gestão de Produtos
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         CARDS DE INDICADORES
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+
+        <!-- =================================================
+             RECEITA HOJE
+        ================================================== -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <span>
+                    Receita hoje
+                </span>
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                </div>
+
+            </div>
+
+
+            <strong>
+                R$ 2.847,50
+            </strong>
+
+
+            <small class="positive">
+
+                +12,4%
+
+                <span>
+                    vs. ontem
+                </span>
+
+            </small>
+
+        </article>
+
+
+        <!-- =================================================
+             VENDAS DO MÊS
+        ================================================== -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <span>
+                    Vendas do mês
+                </span>
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </div>
+
+            </div>
+
+
+            <strong>
+                R$ 68.320,00
+            </strong>
+
+
+            <small class="positive">
+
+                +8,1%
+
+                <span>
+                    vs. mês anterior
+                </span>
+
+            </small>
+
+        </article>
+
+
+        <!-- =================================================
+             CLIENTES ATIVOS
+        ================================================== -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <span>
+                    Clientes ativos
+                </span>
+
+                <div class="stat-icon">
+
+                    <i class="fa-solid fa-user-group"></i>
+
+                </div>
+
+            </div>
+
+
+            <strong>
+                1.243
+            </strong>
+
+
+            <small class="positive">
+
+                +34
+
+                <span>
+                    novos esta semana
+                </span>
+
+            </small>
+
+        </article>
+
+
+        <!-- =================================================
+             ITENS EM FALTA
+        ================================================== -->
+
+        <article class="stat-card">
+
+            <div class="stat-top">
+
+                <span>
+                    Itens em falta
+                </span>
+
+                <div class="stat-icon warning">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+            </div>
+
+
+            <strong>
+                17
+            </strong>
+
+
+            <small class="negative">
+
+                -3
+
+                <span>
+                    vs. ontem
+                </span>
+
+            </small>
+
+        </article>
+
+    </div>
+
+
+    <!-- =====================================================
+         ÁREA PRINCIPAL
+    ====================================================== -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- =================================================
+             VENDAS RECENTES
+        ================================================== -->
+
+        <article class="panel-card sales-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>
+                        Vendas recentes
+                    </h3>
+
+                    <p>
+                        Últimas vendas realizadas
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="#"
+                    class="text-button">
+
+                    Ver todas
+
+                </a>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="sales-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Pedido
+                            </th>
+
+                            <th>
+                                Cliente
+                            </th>
+
+                            <th>
+                                Itens
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Hora
+                            </th>
+
+                            <th>
+                                Pagamento
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <!-- =================================
+                             VENDA 1
+                        ================================== -->
+
+                        <tr>
+
+                            <td>
+
+                                <span class="order-number">
+                                    #4821
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Maria Souza
+                            </td>
+
+                            <td>
+                                7
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    R$ 134,80
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                14:32
+                            </td>
+
+                            <td>
+
+                                <span class="payment pix">
+                                    PIX
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- =================================
+                             VENDA 2
+                        ================================== -->
+
+                        <tr>
+
+                            <td>
+
+                                <span class="order-number">
+                                    #4820
+                                </span>
+
+                            </td>
+
+                            <td>
+                                João Pereira
+                            </td>
+
+                            <td>
+                                3
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    R$ 47,20
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                14:18
+                            </td>
+
+                            <td>
+
+                                <span class="payment debit">
+                                    Débito
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- =================================
+                             VENDA 3
+                        ================================== -->
+
+                        <tr>
+
+                            <td>
+
+                                <span class="order-number">
+                                    #4819
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Ana Lima
+                            </td>
+
+                            <td>
+                                12
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    R$ 218,60
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                13:55
+                            </td>
+
+                            <td>
+
+                                <span class="payment credit">
+                                    Crédito
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- =================================
+                             VENDA 4
+                        ================================== -->
+
+                        <tr>
+
+                            <td>
+
+                                <span class="order-number">
+                                    #4818
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Carlos Neto
+                            </td>
+
+                            <td>
+                                5
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    R$ 89,40
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                13:41
+                            </td>
+
+                            <td>
+
+                                <span class="payment cash">
+                                    Dinheiro
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- =================================
+                             VENDA 5
+                        ================================== -->
+
+                        <tr>
+
+                            <td>
+
+                                <span class="order-number">
+                                    #4817
+                                </span>
+
+                            </td>
+
+                            <td>
+                                Fernanda Costa
+                            </td>
+
+                            <td>
+                                2
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    R$ 28,90
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                13:20
+                            </td>
+
+                            <td>
+
+                                <span class="payment pix">
+                                    PIX
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             MAIS VENDIDOS
+        ================================================== -->
+
+        <article class="panel-card">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>
+                        Mais vendidos
+                    </h3>
+
+                    <p>
+                        Produtos com maior saída
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="ranking-list">
+
+
+                <!-- PRODUTO 1 -->
+
+                <div class="ranking-item">
+
+                    <span class="ranking-position">
+                        1
+                    </span>
+
+
+                    <div class="ranking-info">
+
+                        <strong>
+                            Arroz Tipo 1 5kg
+                        </strong>
+
+                        <small>
+                            Grãos · 61 un.
+                        </small>
+
+                    </div>
+
+
+                    <b>
+                        R$ 854,00
+                    </b>
+
+                </div>
+
+
+                <!-- PRODUTO 2 -->
+
+                <div class="ranking-item">
+
+                    <span class="ranking-position">
+                        2
+                    </span>
+
+
+                    <div class="ranking-info">
+
+                        <strong>
+                            Refrigerante 2L
+                        </strong>
+
+                        <small>
+                            Bebidas · 49 un.
+                        </small>
+
+                    </div>
+
+
+                    <b>
+                        R$ 588,00
+                    </b>
+
+                </div>
+
+
+                <!-- PRODUTO 3 -->
+
+                <div class="ranking-item">
+
+                    <span class="ranking-position">
+                        3
+                    </span>
+
+
+                    <div class="ranking-info">
+
+                        <strong>
+                            Pão de Forma
+                        </strong>
+
+                        <small>
+                            Padaria · 57 un.
+                        </small>
+
+                    </div>
+
+
+                    <b>
+                        R$ 456,00
+                    </b>
+
+                </div>
+
+
+                <!-- PRODUTO 4 -->
+
+                <div class="ranking-item">
+
+                    <span class="ranking-position">
+                        4
+                    </span>
+
+
+                    <div class="ranking-info">
+
+                        <strong>
+                            Óleo de Soja 900ml
+                        </strong>
+
+                        <small>
+                            Mercearia · 43 un.
+                        </small>
+
+                    </div>
+
+
+                    <b>
+                        R$ 387,00
+                    </b>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+
+    <!-- =====================================================
+         ESTOQUE BAIXO
+    ====================================================== -->
+
+    <div class="stock-alert">
+
+
+        <div class="stock-alert-header">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+
+            <strong>
+                Estoque baixo
+            </strong>
+
+
+            <span>
+                4 itens precisam de reposição
+            </span>
+
+        </div>
+
+
+        <div class="stock-items">
+
+
+            <!-- ITEM 1 -->
+
+            <a
+                href="{% url 'produtos' %}?buscar=Feijão"
+                class="stock-item">
+
+                <strong>
+                    Feijão Preto 1kg
+                </strong>
+
+                <span class="stock-current">
+                    4 un.
+                </span>
+
+                <small>
+                    mín. 20
+                </small>
+
+            </a>
+
+
+            <!-- ITEM 2 -->
+
+            <a
+                href="{% url 'produtos' %}?buscar=Óleo"
+                class="stock-item">
+
+                <strong>
+                    Óleo de Soja 900ml
+                </strong>
+
+                <span class="stock-current">
+                    9 un.
+                </span>
+
+                <small>
+                    mín. 30
+                </small>
+
+            </a>
+
+
+            <!-- ITEM 3 -->
+
+            <a
+                href="{% url 'produtos' %}?buscar=Arroz"
+                class="stock-item">
+
+                <strong>
+                    Arroz Tipo 1 5kg
+                </strong>
+
+                <span class="stock-current">
+                    18 un.
+                </span>
+
+                <small>
+                    mín. 40
+                </small>
+
+            </a>
+
+
+            <!-- ITEM 4 -->
+
+            <a
+                href="{% url 'produtos' %}?buscar=Açúcar"
+                class="stock-item">
+
+                <strong>
+                    Açúcar Cristal 1kg
+                </strong>
+
+                <span class="stock-current">
+                    11 un.
+                </span>
+
+                <small>
+                    mín. 25
+                </small>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACESSO RÁPIDO AOS MÓDULOS
+    ====================================================== -->
+
+    <div class="dashboard-quick-access">
+
+
+        <div class="panel-header quick-access-header">
+
+            <div>
+
+                <h3>
+                    Acesso rápido
+                </h3>
+
+                <p>
+                    Acesse os principais módulos do MercadoNex
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-access-grid">
+
+
+            <!-- PRODUTOS -->
+
+            <a
+                href="{% url 'produtos' %}"
+                class="quick-access-card">
+
+                <div class="quick-access-icon blue">
+
+                    <i class="fa-solid fa-box"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Gestão de Produtos
+                    </strong>
+
+                    <span>
+                        Cadastre e gerencie produtos
+                    </span>
+
+                </div>
+
+                <i
+                    class="fa-solid fa-chevron-right quick-arrow">
+                </i>
+
+            </a>
+
+
+            <!-- CLIENTES -->
+
+            <a
+                href="{% url 'clientes' %}"
+                class="quick-access-card">
+
+                <div class="quick-access-icon green">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Gestão de Clientes
+                    </strong>
+
+                    <span>
+                        Gerencie seus clientes
+                    </span>
+
+                </div>
+
+                <i
+                    class="fa-solid fa-chevron-right quick-arrow">
+                </i>
+
+            </a>
+
+
+            <!-- FINANCEIRO -->
+
+            <div
+                class="quick-access-card quick-disabled">
+
+                <div class="quick-access-icon yellow">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Controle Financeiro
+                    </strong>
+
+                    <span>
+                        Fluxo de caixa e resultados
+                    </span>
+
+                </div>
+
+                <span class="quick-coming">
+                    Em breve
+                </span>
+
+            </div>
+
+
+            <!-- RELATÓRIOS -->
+
+            <div
+                class="quick-access-card quick-disabled">
+
+                <div class="quick-access-icon purple">
+
+                    <i class="fa-solid fa-file-chart-column"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Relatórios Inteligentes
+                    </strong>
+
+                    <span>
+                        Indicadores e análises
+                    </span>
+
+                </div>
+
+                <span class="quick-coming">
+                    Em breve
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{{ block.super }}
+
+<script src="{% static 'js/formulario.js' %}"></script>
+
+<script src="{% static 'js/cliente.js' %}"></script>
+
+<script src="{% static 'js/vencimento.js' %}"></script>
+
+{% endblock %}

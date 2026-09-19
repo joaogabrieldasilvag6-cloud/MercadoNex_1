@@ -1,0 +1,128 @@
+<div id="modalProduto" class="produto-modal" aria-hidden="true">
+    <div class="produto-modal-overlay" data-modal-close></div>
+
+    <div class="produto-modal-content" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitulo">
+        <header class="produto-modal-header">
+            <div>
+                <span class="produto-modal-eyebrow">MERCADONEX</span>
+                <h2 id="modalProdutoTitulo">Novo Produto</h2>
+                <p id="modalProdutoSubtitle">Preencha os dados abaixo para cadastrar o produto.</p>
+            </div>
+            <button type="button" class="produto-modal-close" id="btnFecharModal" aria-label="Fechar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </header>
+
+        <form id="product-form" method="POST" action="{% url 'cadastrar_produto' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="produto-form-card">
+                <div class="produto-form-title"><i class="fa-solid fa-box"></i> Dados Gerais</div>
+                <div class="produto-form-grid">
+                    <div class="produto-field">
+                        <label for="produto-nome">Nome do Produto <span>*</span></label>
+                        <input id="produto-nome" type="text" name="nome" placeholder="Ex.: Arroz Tipo 1" required>
+                    </div>
+                    <div class="produto-field">
+                        <label for="produto-categoria">Categoria <span>*</span></label>
+                        <select id="produto-categoria" name="categoria" required>
+                            <option value="">Selecione</option>
+                            <option value="Alimentos">Alimentos</option>
+                            <option value="Bebidas">Bebidas</option>
+                            <option value="Higiene">Higiene</option>
+                            <option value="Limpeza">Limpeza</option>
+                            <option value="Padaria">Padaria</option>
+                            <option value="Frios">Frios</option>
+                            <option value="Hortifruti">Hortifruti</option>
+                        </select>
+                    </div>
+                    <div class="produto-field">
+                        <label for="produto-codigo">Código <span>*</span></label>
+                        <input id="produto-codigo" type="text" name="codigo" placeholder="P001" required>
+                    </div>
+                    <div class="produto-field">
+                        <label for="produto-marca">Marca</label>
+                        <input id="produto-marca" type="text" name="marca" placeholder="Marca do produto">
+                    </div>
+                    <div class="produto-field full">
+                        <label for="produto-descricao">Descrição</label>
+                        <textarea id="produto-descricao" name="descricao" rows="4" placeholder="Descrição do produto..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="produto-form-card">
+                <div class="produto-form-title"><i class="fa-solid fa-wallet"></i> Valores</div>
+                <div class="produto-form-grid">
+                    <div class="produto-field">
+                        <label for="produto-preco-venda">Preço de Venda <span>*</span></label>
+                        <input id="produto-preco-venda" type="number" step="0.01" min="0" name="preco_venda" required>
+                    </div>
+                    <div class="produto-field">
+                        <label for="produto-preco-custo">Preço de Custo</label>
+                        <input id="produto-preco-custo" type="number" step="0.01" min="0" name="preco_custo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="produto-form-card">
+                <div class="produto-form-title"><i class="fa-solid fa-boxes-stacked"></i> Estoque</div>
+                <div class="produto-form-grid">
+                    <div class="produto-field">
+                        <label for="produto-quantidade">Quantidade em Estoque <span>*</span></label>
+                        <input id="produto-quantidade" type="number" name="quantidade" min="0" required>
+                    </div>
+                    <div class="produto-field">
+                        <label for="produto-validade">Data de Validade</label>
+                        <input id="produto-validade" type="date" name="validade">
+                    </div>
+                    <div class="produto-field full">
+                        <label for="produto-fornecedor">Fornecedor</label>
+                        <input id="produto-fornecedor" type="text" name="fornecedor" placeholder="Nome do fornecedor">
+                    </div>
+                </div>
+            </div>
+
+            <div class="produto-form-card">
+                <div class="produto-form-title"><i class="fa-regular fa-image"></i> Imagem do Produto</div>
+                <div class="produto-file-drop" id="fileDrop">
+                    <input id="img-upload" type="file" name="imagem" accept="image/png,image/jpeg,image/webp">
+                    <div class="produto-upload-content">
+                        <img id="uploadPreview" class="produto-upload-preview" alt="Pré-visualização da imagem">
+                        <div class="produto-upload-icon"><i class="fa-regular fa-image"></i></div>
+                        <strong id="uploadTitle">Clique para selecionar uma imagem</strong>
+                        <span id="uploadSubtitle">PNG, JPG ou WEBP</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="produto-form-card">
+                <div class="produto-form-title"><i class="fa-solid fa-sliders"></i> Configurações</div>
+                <div class="produto-toggle-grid">
+                    <div class="produto-toggle-box">
+                        <div><strong>Produto disponível</strong><span>Permitir venda deste produto</span></div>
+                        <label class="produto-switch">
+                            <input type="checkbox" name="status" id="produto-status" checked>
+                            <span></span>
+                        </label>
+                    </div>
+                    <div class="produto-toggle-box">
+                        <div><strong>Produto em destaque</strong><span>Mostrar como destaque no sistema</span></div>
+                        <label class="produto-switch">
+                            <input type="checkbox" name="destaque" id="produto-destaque">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="produto-form-actions">
+                <button type="button" class="produto-btn-cancel" id="btnCancelarProduto">Cancelar</button>
+                <button type="submit" class="produto-btn-save" id="btnSalvarProduto">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                    <span id="btnSalvarTexto">Salvar Produto</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+{% extends "base_dashboard.html" %}
+
+{% load static %}
+
+{% block titulo %}
+Gestão de Produtos - MercadoNex
+{% endblock %}
+
+
+{% block cabecalho %}
+<div class="page-heading" id="pageHeading">
+
+    <h1 id="pageTitle">
+        Gestão de Produtos
+    </h1>
+
+    <p id="pageSubtitle">
+        Controle de produtos e inventário
+    </p>
+
+</div>
+
+{% endblock %}
+
+{% block estilos %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/produto.css' %}">
+
+{% endblock %}
+
+{% block conteudo %}
+
+<section class="produtos-page">
+
+    <div class="produtos-topo">
+
+        <div class="produtos-titulo">
+
+            <span class="produtos-eyebrow">
+                CATÁLOGO
+            </span>
+
+            <h1>
+                Gestão de Produtos
+            </h1>
+
+            <p>
+                Controle de produtos e inventário
+            </p>
+
+        </div>
+
+
+        <button
+            id="btnCadastrar"
+            type="button"
+            class="btn-novo-produto">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Novo Produto
+
+        </button>
+
+    </div>
+    {% include "privado/cards_produtos.html" %}
+    {% include "privado/tabela_produto.html" %}
+    {% include "privado/modal_produto.html" %}
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+
+{{ block.super }}
+
+<script
+    src="{% static 'js/produtos.js' %}">
+</script>
+
+{% endblock %}

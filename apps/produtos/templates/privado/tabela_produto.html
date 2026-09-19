@@ -1,0 +1,132 @@
+<section class="produtos-table-card">
+    <form method="GET" class="produtos-toolbar">
+        <div class="produto-search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="buscar" class="produto-search" placeholder="Buscar produto..." value="{{ buscar|default:'' }}" autocomplete="off">
+        </div>
+
+        <select name="categoria" class="produto-filter">
+            <option value="">Todas as categorias</option>
+            <option value="Alimentos" {% if categoria == "Alimentos" %}selected{% endif %}>Alimentos</option>
+            <option value="Bebidas" {% if categoria == "Bebidas" %}selected{% endif %}>Bebidas</option>
+            <option value="Higiene" {% if categoria == "Higiene" %}selected{% endif %}>Higiene</option>
+            <option value="Limpeza" {% if categoria == "Limpeza" %}selected{% endif %}>Limpeza</option>
+            <option value="Padaria" {% if categoria == "Padaria" %}selected{% endif %}>Padaria</option>
+            <option value="Frios" {% if categoria == "Frios" %}selected{% endif %}>Frios</option>
+            <option value="Hortifruti" {% if categoria == "Hortifruti" %}selected{% endif %}>Hortifruti</option>
+        </select>
+
+        <select name="status" class="produto-filter produto-filter-status">
+            <option value="">Todos os status</option>
+            <option value="ativo" {% if status == "ativo" %}selected{% endif %}>Ativos</option>
+            <option value="inativo" {% if status == "inativo" %}selected{% endif %}>Inativos</option>
+        </select>
+
+        <button type="submit" class="btn-filtrar">Filtrar</button>
+    </form>
+
+    <div class="produtos-table-wrapper">
+        <table class="produtos-table">
+            <thead>
+                <tr>
+                    <th>CÓDIGO</th>
+                    <th>PRODUTO</th>
+                    <th>CATEGORIA</th>
+                    <th>PREÇO</th>
+                    <th>ESTOQUE</th>
+                    <th>STATUS</th>
+                    <th class="th-acoes">AÇÕES</th>
+                </tr>
+            </thead>
+            <tbody id="produtos-tbody">
+                {% for produto in produtos %}
+                <tr class="produto-row">
+                    <td><span class="produto-codigo">{{ produto.codigo }}</span></td>
+
+                    <td>
+                        <div class="produto-name-cell">
+                            <div class="produto-mini-image">
+                                {% if produto.imagem %}
+                                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                                {% else %}
+                                    <i class="fa-solid fa-box"></i>
+                                {% endif %}
+                            </div>
+                            <div class="produto-name-info">
+                                <strong>{{ produto.nome }}</strong>
+                                {% if produto.marca %}<span>{{ produto.marca }}</span>{% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td><span class="produto-categoria">{{ produto.categoria }}</span></td>
+                    <td><strong class="produto-preco">R$ {{ produto.preco_venda|floatformat:2 }}</strong></td>
+
+                    <td>
+                        {% if produto.quantidade == 0 %}
+                            <span class="produto-estoque danger">0 un.</span>
+                        {% elif produto.quantidade <= 10 %}
+                            <span class="produto-estoque warning">{{ produto.quantidade }} un.</span>
+                        {% else %}
+                            <span class="produto-estoque normal">{{ produto.quantidade }} un.</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if not produto.status %}
+                            <span class="produto-status inactive">Inativo</span>
+                        {% elif produto.quantidade == 0 %}
+                            <span class="produto-status out">Sem Estoque</span>
+                        {% elif produto.quantidade <= 10 %}
+                            <span class="produto-status low">Baixo Estoque</span>
+                        {% else %}
+                            <span class="produto-status active">Ativo</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div class="produto-actions">
+                            <button type="button" class="produto-action edit" title="Editar produto" onclick="editarProduto({{ produto.id }})">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <a href="{% url 'excluir_produto' produto.id %}" class="produto-action delete" title="Excluir produto" onclick="return confirm('Deseja remover este produto?')">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="produtos-empty">
+                        <div class="produtos-empty-content">
+                            <i class="fa-solid fa-box-open"></i>
+                            <strong>Nenhum produto encontrado</strong>
+                            <span>Tente mudar os filtros ou cadastre um novo produto.</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if produtos.has_other_pages %}
+    <div class="produtos-pagination">
+        {% if produtos.has_previous %}
+            <a class="pagination-button" href="?buscar={{ buscar|urlencode }}&categoria={{ categoria|urlencode }}&status={{ status|urlencode }}&page={{ produtos.previous_page_number }}" aria-label="Página anterior"><i class="fa-solid fa-chevron-left"></i></a>
+        {% endif %}
+
+        {% for pagina in produtos.paginator.page_range %}
+            {% if pagina == produtos.number %}
+                <span class="pagination-button active">{{ pagina }}</span>
+            {% else %}
+                <a class="pagination-button" href="?buscar={{ buscar|urlencode }}&categoria={{ categoria|urlencode }}&status={{ status|urlencode }}&page={{ pagina }}">{{ pagina }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if produtos.has_next %}
+            <a class="pagination-button" href="?buscar={{ buscar|urlencode }}&categoria={{ categoria|urlencode }}&status={{ status|urlencode }}&page={{ produtos.next_page_number }}" aria-label="Próxima página"><i class="fa-solid fa-chevron-right"></i></a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>

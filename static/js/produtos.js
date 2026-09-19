@@ -1,170 +1,86 @@
-// ============================
-// MODAL DE PRODUTOS
-// ============================
+/* MercadoNex — Gestão de Produtos */
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modalProduto");
+    const form = document.getElementById("product-form");
+    const btnCadastrar = document.getElementById("btnCadastrar");
+    const btnFechar = document.getElementById("btnFecharModal");
+    const btnCancelar = document.getElementById("btnCancelarProduto");
+    const modalTitulo = document.getElementById("modalProdutoTitulo");
+    const modalSubtitle = document.getElementById("modalProdutoSubtitle");
+    const btnSalvar = document.getElementById("btnSalvarProduto");
+    const inputImagem = document.getElementById("img-upload");
+    const fileDrop = document.getElementById("fileDrop");
+    const preview = document.getElementById("uploadPreview");
+    const uploadTitle = document.getElementById("uploadTitle");
+    const uploadSubtitle = document.getElementById("uploadSubtitle");
+    const uploadIcon = document.querySelector(".produto-upload-icon");
 
-const modalProduto = document.getElementById("modalProduto");
-const formProduto = document.getElementById("product-form");
-const btnCadastrar = document.getElementById("btnCadastrar");
-const btnFechar = document.querySelector(".fechar");
+    function abrirModal(){ if(!modal)return; modal.classList.add("show"); modal.setAttribute("aria-hidden","false"); document.body.classList.add("modal-produto-open"); setTimeout(()=>form?.elements["nome"]?.focus(),120); }
+    function fecharModal(){ if(!modal)return; modal.classList.remove("show"); modal.setAttribute("aria-hidden","true"); document.body.classList.remove("modal-produto-open"); }
+    window.fecharModalProduto = fecharModal;
 
+    function novoProduto(){
+        if(!form)return;
+        form.reset(); form.action="/produtos/cadastrar/";
+        if(modalTitulo) modalTitulo.textContent="Novo Produto";
+        if(modalSubtitle) modalSubtitle.textContent="Preencha os dados abaixo para cadastrar o produto.";
+        if(btnSalvar) btnSalvar.innerHTML='<i class="fa-regular fa-floppy-disk"></i><span>Salvar Produto</span>';
+        if(form.elements["status"]) form.elements["status"].checked=true;
+        if(form.elements["destaque"]) form.elements["destaque"].checked=false;
+        limparPreview(); abrirModal();
+    }
+    btnCadastrar?.addEventListener("click", novoProduto);
 
-// ============================
-// ABRIR MODAL PARA CADASTRAR
-// ============================
+    window.editarProduto = async function(id){
+        if(!form || !modal)return;
+        try{
+            const resposta=await fetch(`/produtos/json/${id}/`,{headers:{"X-Requested-With":"XMLHttpRequest","Accept":"application/json"}});
+            if(!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+            const produto=await resposta.json();
+            form.action=`/produtos/editar/${id}/`;
+            ["nome","categoria","descricao","codigo","marca","preco_venda","preco_custo","quantidade","validade","fornecedor"].forEach(nome=>{if(form.elements[nome])form.elements[nome].value=produto[nome]??"";});
+            if(form.elements["status"]) form.elements["status"].checked=produto.status===true||produto.status===1||produto.status==="1";
+            if(form.elements["destaque"]) form.elements["destaque"].checked=produto.destaque===true||produto.destaque===1||produto.destaque==="1";
+            if(modalTitulo) modalTitulo.textContent="Editar Produto";
+            if(modalSubtitle) modalSubtitle.textContent="Atualize os dados do produto e salve as alterações.";
+            if(btnSalvar) btnSalvar.innerHTML='<i class="fa-solid fa-pen"></i><span>Atualizar Produto</span>';
+            limparPreview();
+            if(produto.imagem) mostrarPreview(produto.imagem,"Imagem atual");
+            abrirModal();
+        }catch(erro){ console.error(erro); alert("Não foi possível carregar os dados do produto."); }
+    };
 
-if (btnCadastrar) {
+    function mostrarPreview(url,nome){
+        if(!preview)return;
+        preview.src=url; preview.style.display="block";
+        if(uploadIcon) uploadIcon.style.display="none";
+        if(uploadTitle) uploadTitle.textContent="Imagem selecionada";
+        if(uploadSubtitle) uploadSubtitle.textContent=nome||"Imagem atual";
+    }
+    function limparPreview(){
+        if(preview){preview.removeAttribute("src");preview.style.display="none";}
+        if(uploadIcon) uploadIcon.style.display="grid";
+        if(uploadTitle) uploadTitle.textContent="Clique para selecionar uma imagem";
+        if(uploadSubtitle) uploadSubtitle.textContent="PNG, JPG ou WEBP";
+        if(inputImagem) inputImagem.value="";
+    }
 
-    btnCadastrar.addEventListener("click", () => {
+    btnFechar?.addEventListener("click",fecharModal);
+    btnCancelar?.addEventListener("click",fecharModal);
+    modal?.addEventListener("click",e=>{if(e.target.matches("[data-modal-close]"))fecharModal();});
+    document.addEventListener("keydown",e=>{if(e.key==="Escape"&&modal?.classList.contains("show"))fecharModal();});
 
-        formProduto.reset();
+    fileDrop?.addEventListener("click",()=>inputImagem?.click());
+    inputImagem?.addEventListener("change",()=>{const arquivo=inputImagem.files?.[0]; if(!arquivo)return; if(!arquivo.type.startsWith("image/")){alert("Selecione uma imagem válida.");inputImagem.value="";limparPreview();return;} mostrarPreview(URL.createObjectURL(arquivo),arquivo.name);});
+    fileDrop?.addEventListener("dragover",e=>{e.preventDefault();fileDrop.classList.add("dragover")});
+    fileDrop?.addEventListener("dragleave",()=>fileDrop.classList.remove("dragover"));
+    fileDrop?.addEventListener("drop",e=>{e.preventDefault();fileDrop.classList.remove("dragover");const arquivo=e.dataTransfer.files?.[0];if(!arquivo)return;if(!arquivo.type.startsWith("image/")){alert("Solte apenas arquivos de imagem.");return;}try{const dt=new DataTransfer();dt.items.add(arquivo);inputImagem.files=dt.files;}catch(_){ }mostrarPreview(URL.createObjectURL(arquivo),arquivo.name);});
 
-        formProduto.action = "/produtos/cadastrar/";
-
-        modalProduto.classList.add("show");
-
+    form?.addEventListener("submit",e=>{
+        if(form.dataset.enviando==="true"){e.preventDefault();return;}
+        form.dataset.enviando="true";
+        if(btnSalvar){btnSalvar.disabled=true;btnSalvar.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>Salvando...</span>';}
     });
 
-}
-
-
-// ============================
-// FECHAR MODAL
-// ============================
-
-function fecharModalProduto(){
-
-    modalProduto.classList.remove("show");
-
-}
-
-
-if(btnFechar){
-
-    btnFechar.addEventListener("click", fecharModalProduto);
-
-}
-
-
-// Fecha clicando fora
-
-window.addEventListener("click", function(e){
-
-    if(e.target === modalProduto){
-
-        fecharModalProduto();
-
-    }
-
+    console.log("MercadoNex — produtos.js carregado.");
 });
-
-
-// ============================
-// EDITAR PRODUTO
-// ============================
-
-async function editarProduto(id){
-
-    try{
-
-        const resposta = await fetch(`/produtos/json/${id}/`, {
-            method: "GET",
-            headers:{
-                "X-Requested-With":"XMLHttpRequest"
-            }
-        });
-
-
-        if(!resposta.ok){
-
-            throw new Error(
-                "Erro ao buscar produto: " + resposta.status
-            );
-
-        }
-
-        
-        const produto = await resposta.json();
-        console.log(formProduto);
-        console.log(formProduto.elements);
-        console.log(formProduto.elements["nome"]);
-
-        console.log("Produto carregado:", produto);
-
-
-        // altera ação do formulário
-
-        formProduto.action = `/produtos/editar/${id}/`;
-
-
-        // Preenche campos
-
-        formProduto.elements["nome"].value =
-            produto.nome || "";
-
-
-        formProduto.elements["categoria"].value =
-            produto.categoria || "";
-
-
-        formProduto.elements["descricao"].value =
-            produto.descricao || "";
-
-
-        formProduto.elements["codigo"].value =
-            produto.codigo || "";
-
-
-        formProduto.elements["marca"].value =
-            produto.marca || "";
-
-
-        formProduto.elements["preco_venda"].value =
-            produto.preco_venda || "";
-
-
-        formProduto.elements["preco_custo"].value =
-            produto.preco_custo || "";
-
-
-        formProduto.elements["quantidade"].value =
-            produto.quantidade || "";
-
-
-        formProduto.elements["validade"].value =
-            produto.validade || "";
-
-
-        formProduto.elements["fornecedor"].value =
-            produto.fornecedor || "";
-
-
-        formProduto.elements["status"].checked =
-            produto.status;
-
-
-        formProduto.elements["destaque"].checked =
-            produto.destaque;
-
-
-
-        // abre modal
-
-        modalProduto.classList.add("show");
-
-
-    }catch(erro){
-
-        console.error(
-            "Erro ao carregar produto:",
-            erro
-        );
-
-        alert("Erro ao acessar o produto.");
-
-    }
-
-}
-
-
-
-console.log("JS Produtos carregado.");

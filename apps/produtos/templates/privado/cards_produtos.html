@@ -1,0 +1,22 @@
+<div class="produtos-stats">
+    <article class="produto-stat-card">
+        <div class="produto-stat-content">
+            <span class="produto-stat-label">TOTAL DE PRODUTOS</span>
+            <strong class="produto-stat-value">{{ total_produtos|default:"0" }}</strong>
+        </div>
+    </article>
+
+    <article class="produto-stat-card">
+        <div class="produto-stat-content">
+            <span class="produto-stat-label">ABAIXO DO MÍNIMO</span>
+            <strong class="produto-stat-value">{{ estoque_baixo|default:"0" }}</strong>
+        </div>
+    </article>
+
+    <article class="produto-stat-card">
+        <div class="produto-stat-content">
+            <span class="produto-stat-label">SEM ESTOQUE</span>
+            <strong class="produto-stat-value">{{ sem_estoque|default:"0" }}</strong>
+        </div>
+    </article>
+</div>

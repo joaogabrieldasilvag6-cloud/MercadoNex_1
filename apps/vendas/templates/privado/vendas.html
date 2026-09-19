@@ -1,0 +1,150 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block titulo %}PDV - Vendas - MercadoNex{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/vendas.css' %}">
+{% endblock %}
+
+{% block cabecalho %}
+<div>
+    <h1>Ponto de Venda</h1>
+    <p>Registre vendas, controle o carrinho e atualize o estoque.</p>
+</div>
+{% endblock %}
+
+{% block acoes_cabecalho %}
+<button class="pdv-new-sale" id="btnNovaVenda" type="button">
+    <i class="fa-solid fa-plus"></i>
+    Nova Venda
+</button>
+{% endblock %}
+
+{% block conteudo %}
+<section class="pdv-page">
+    <div class="pdv-toolbar">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="buscaProduto" type="search" autocomplete="off" placeholder="Buscar produto por nome ou código...">
+            <kbd>Ctrl + K</kbd>
+        </div>
+        <div class="pdv-count"><strong id="quantidadeProdutos">0</strong> produtos disponíveis</div>
+    </div>
+
+    <div class="category-chips" id="filtrosCategoria" aria-label="Categorias">
+        <button type="button" class="category-chip active" data-category="TODAS">Todos</button>
+        {% for categoria in categorias %}
+            <button type="button" class="category-chip" data-category="{{ categoria|escape }}">{{ categoria }}</button>
+        {% endfor %}
+    </div>
+
+    <div class="pdv-layout">
+        <section class="products-panel" aria-label="Produtos">
+            <div class="products-grid" id="gradeProdutos">
+                {% for produto in produtos %}
+                    {% if produto.quantidade == 0 %}
+                        {% with estoque_classe='stock-red' estoque_texto='Sem estoque' %}
+                            <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
+                                <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag {{ estoque_classe }}">{{ estoque_texto }}</span></div>
+                                <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
+                                <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product" disabled>Indisponível</button></div>
+                            </article>
+                        {% endwith %}
+                    {% elif produto.quantidade <= 10 %}
+                        <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
+                            <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag stock-yellow">{{ produto.quantidade }} em estoque</span></div>
+                            <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
+                            <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product">Adicionar</button></div>
+                        </article>
+                    {% else %}
+                        <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
+                            <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag stock-green">{{ produto.quantidade }} em estoque</span></div>
+                            <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
+                            <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product">Adicionar</button></div>
+                        </article>
+                    {% endif %}
+                {% empty %}
+                    <div class="empty-products"><i class="fa-solid fa-box-open"></i><h3>Nenhum produto disponível</h3><p>Cadastre produtos para começar uma venda.</p></div>
+                {% endfor %}
+            </div>
+            <div class="no-results" id="semResultados" hidden><i class="fa-solid fa-magnifying-glass"></i><h3>Nenhum produto encontrado</h3><p>Tente outro nome, código ou categoria.</p></div>
+        </section>
+
+        <aside class="cart-panel" aria-label="Carrinho da venda">
+            <div class="cart-header">
+                <div><span class="eyebrow">NOVA VENDA</span><h2>Carrinho</h2></div>
+                <span class="cart-badge" id="badgeCarrinho">0 itens</span>
+            </div>
+
+            <div class="cart-list" id="listaCarrinho">
+                <div class="cart-empty" id="carrinhoVazio"><i class="fa-solid fa-cart-shopping"></i><strong>Seu carrinho está vazio</strong><span>Adicione produtos para iniciar a venda.</span></div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="customer-field">
+                    <label for="clienteVenda">Cliente</label>
+                    <select id="clienteVenda">
+                        <option value="">Consumidor Final</option>
+                        {% for cliente in clientes %}<option value="{{ cliente.id }}" data-saldo="{{ cliente.saldo_fiado }}" data-limite="{{ cliente.limite_fiado }}" data-ativo-fiado="{{ cliente.ativo_fiado|yesno:'1,0' }}">{{ cliente.nome }}</option>{% endfor %}
+                    </select>
+                    <div class="fiado-client-info" id="infoFiadoCliente" hidden>
+                        <span>Saldo fiado: <strong id="saldoFiadoCliente">R$ 0,00</strong></span>
+                        <span>Disponível: <strong id="disponivelFiadoCliente">R$ 0,00</strong></span>
+                    </div>
+                </div>
+                <div class="discount-field">
+                    <label for="descontoVenda">Desconto</label>
+                    <div class="input-suffix"><input id="descontoVenda" type="number" min="0" max="100" step="0.01" value="0"><span>%</span></div>
+                </div>
+                <div class="summary-line"><span>Subtotal</span><strong id="subtotalVenda">R$ 0,00</strong></div>
+                <div class="summary-line discount-line"><span>Desconto</span><strong id="valorDesconto">- R$ 0,00</strong></div>
+                <div class="summary-total"><span>Total</span><strong id="totalVenda">R$ 0,00</strong></div>
+            </div>
+
+            <div class="payment-section">
+                <label>Forma de pagamento</label>
+                <div class="payment-grid" id="pagamentos">
+                    <button type="button" class="payment-card active" data-payment="PIX"><i class="fa-brands fa-pix"></i><span>PIX</span></button>
+                    <button type="button" class="payment-card" data-payment="DEBITO"><i class="fa-solid fa-credit-card"></i><span>Débito</span></button>
+                    <button type="button" class="payment-card" data-payment="CREDITO"><i class="fa-regular fa-credit-card"></i><span>Crédito</span></button>
+                    <button type="button" class="payment-card" data-payment="DINHEIRO"><i class="fa-solid fa-money-bill-wave"></i><span>Dinheiro</span></button>
+                    <button type="button" class="payment-card payment-fiado" data-payment="FIADO"><i class="fa-solid fa-book"></i><span>Fiado</span></button>
+                </div>
+                <div class="cash-area" id="areaDinheiro" hidden>
+                    <label for="valorRecebido">Valor recebido</label>
+                    <div class="money-input"><span>R$</span><input id="valorRecebido" type="number" min="0" step="0.01" placeholder="0,00"></div>
+                    <div class="change-line"><span>Troco</span><strong id="trocoVenda">R$ 0,00</strong></div>
+                </div>
+            </div>
+
+            <button type="button" class="finish-sale" id="btnFinalizarVenda"><i class="fa-solid fa-check"></i> Finalizar Venda</button>
+            <p class="shortcut-help"><kbd>Enter</kbd> confirmar venda · <kbd>Ctrl + K</kbd> buscar produto</p>
+        </aside>
+    </div>
+</section>
+
+<div class="confirmation-overlay" id="confirmacaoVenda" hidden>
+    <div class="confirmation-card" role="dialog" aria-modal="true" aria-labelledby="confirmacaoTitulo">
+        <button type="button" class="close-confirmation" id="fecharConfirmacao" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+        <div class="confirmation-icon"><i class="fa-solid fa-receipt"></i></div>
+        <span class="eyebrow">CONFIRMAÇÃO</span>
+        <h2 id="confirmacaoTitulo">Finalizar venda?</h2>
+        <p>Confira os dados antes de registrar esta operação.</p>
+        <div class="confirmation-total"><span>Total da venda</span><strong id="confirmacaoTotal">R$ 0,00</strong></div>
+        <div class="confirmation-details"><span>Pagamento</span><strong id="confirmacaoPagamento">PIX</strong></div>
+        <div class="confirmation-details"><span>Itens</span><strong id="confirmacaoItens">0</strong></div>
+        <div class="confirmation-details" id="confirmacaoFiadoLinha" hidden><span>Novo saldo fiado</span><strong id="confirmacaoSaldoFiado">R$ 0,00</strong></div>
+        <div class="confirmation-actions"><button type="button" class="secondary-button" id="cancelarConfirmacao">Voltar</button><button type="button" class="primary-button" id="confirmarVenda">Confirmar Venda</button></div>
+        <p class="confirmation-error" id="erroVenda" hidden></p>
+    </div>
+</div>
+
+<form id="formFinalizarVenda" method="post" action="{% url 'finalizar_venda' %}" data-finalizar-url="{% url 'finalizar_venda' %}" hidden>
+    {% csrf_token %}
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/vendas.js' %}"></script>
+{% endblock %}

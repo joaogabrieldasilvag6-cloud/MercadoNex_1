@@ -1,482 +1,499 @@
- {% load static %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MercadoNex - Painel de Gestão">
-    <title>{% block titulo %}MercadoNex {% endblock %}| Painel Inicial</title>
 
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="icon" type="image/png" href="{% static 'img/favicon_mercadonex.png' %}">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="MercadoNex - Painel de Gestão">
+
+    <title>
+        {% block titulo %}
+            MercadoNex
+        {% endblock %}
+        | MercadoNex
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/dashboard.css' %}">
+
+    {% block estilos %}
+    {% endblock %}
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="{% static 'img/favicon_mercadonex.png' %}">
+
 </head>
 
+
 <body>
+
 <div class="app-shell">
 
-    <!-- Overlay para menu mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <!-- =====================================================
+         OVERLAY MOBILE
+    ====================================================== -->
 
-    <!-- =========================
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay">
+    </div>
+
+
+    <!-- =====================================================
          SIDEBAR
-    ========================== -->
-    <aside class="sidebar" id="sidebar">
+    ====================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar">
+
+        <!-- =================================================
+             LOGO
+        ================================================== -->
 
         <div class="sidebar-brand">
-            <a href="#" class="brand-link" data-section="dashboard" aria-label="Ir para o Painel Inicial">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="brand-link"
+                aria-label="Ir para o Painel Inicial">
+
                 <div class="brand-icon">
-                    <img src="{% static 'img/Logo.jpeg' %}" alt="MercadoNex">
+
+                    <img
+                        src="{% static 'img/Logo.jpeg' %}"
+                        alt="MercadoNex">
+
                 </div>
+
                 <div class="brand-text">
-                    <strong>MercadoNex</strong>
-                    <span>Gestão Simples</span>
+
+                    <strong>
+                        MercadoNex
+                    </strong>
+
+                    <span>
+                        Gestão Simples
+                    </span>
+
                 </div>
+
             </a>
 
-            <button class="mobile-close" id="mobileClose" type="button" aria-label="Fechar menu">
+
+            <button
+                class="mobile-close"
+                id="mobileClose"
+                type="button"
+                aria-label="Fechar menu">
+
                 <i class="fa-solid fa-xmark"></i>
+
             </button>
+
         </div>
 
-        <nav class="main-navigation" aria-label="Navegação principal">
+
+        <!-- =================================================
+             NAVEGAÇÃO
+        ================================================== -->
+
+        <nav
+            class="main-navigation"
+            aria-label="Navegação principal">
+
+
+            <!-- =================================================
+                 DASHBOARD
+            ================================================== -->
 
             <div class="nav-group">
-                <span class="nav-group-title">Dashboard</span>
 
-                <button class="nav-item active"
-                        type="button"
-                        data-section="dashboard"
-                        data-title="Painel Inicial"
-                        data-subtitle="Visão geral do seu mercadinho">
-                    <span class="nav-icon"><i class="fa-solid fa-grid-2"></i></span>
-                    <span class="nav-label">Painel Inicial</span>
-                </button>
+                <span class="nav-group-title">
+                    Dashboard
+                </span>
 
-                <button  href="{% url 'produtos' %}" class="nav-item"
-                        type="button"
-                        data-section="produtos"
-                        data-title="Gestão de Produtos"
-                        data-subtitle="Cadastre, edite e acompanhe seus produtos" >
-                    <span class="nav-icon"><i class="fa-solid fa-box"></i></span>
-                    <span class="nav-label">Gestão de Produtos</span>
-                    
-                </button>
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="clientes"
-                        data-title="Gestão de Clientes"
-                        data-subtitle="Gerencie seus clientes e informações de cadastro">
-                    <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
-                    <span class="nav-label">Gestão de Clientes</span>
-                </button>
+                <!-- PAINEL INICIAL -->
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="financeiro"
-                        data-title="Controle Financeiro"
-                        data-subtitle="Acompanhe receitas, despesas e resultados">
-                    <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
-                    <span class="nav-label">Controle Financeiro</span>
-                </button>
+                <a
+                    href="{% url 'dashboard' %}"
+                    class="nav-item"
+                    data-page="dashboard">
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="relatorios"
-                        data-title="Relatórios Inteligentes"
-                        data-subtitle="Transforme seus dados em informações úteis">
-                    <span class="nav-icon"><i class="fa-solid fa-file-chart-column"></i></span>
-                    <span class="nav-label">Relatórios Inteligentes</span>
-                </button>
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-grid-2"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Painel Inicial
+                    </span>
+
+                </a>
+
+
+                <!-- PRODUTOS -->
+
+                <a
+                    href="{% url 'produtos' %}"
+                    class="nav-item"
+                    data-page="produtos">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-box"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Gestão de Produtos
+                    </span>
+
+                </a>
+
+
+                <!-- CLIENTES -->
+
+                <a
+                    href="{% url 'clientes' %}"
+                    class="nav-item"
+                    data-page="clientes">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Gestão de Clientes
+                    </span>
+
+                </a>
+
+
+                <!-- FINANCEIRO -->
+
+                <a
+                    href="#"
+                    class="nav-item disabled-nav"
+                    data-page="financeiro"
+                    title="Módulo em desenvolvimento">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Controle Financeiro
+                    </span>
+
+                    <span class="nav-coming">
+                        Em breve
+                    </span>
+
+                </a>
+
+
+                <!-- RELATÓRIOS -->
+
+                <a
+                    href="#"
+                    class="nav-item disabled-nav"
+                    data-page="relatorios"
+                    title="Módulo em desenvolvimento">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-file-chart-column"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Relatórios Inteligentes
+                    </span>
+
+                    <span class="nav-coming">
+                        Em breve
+                    </span>
+
+                </a>
+
             </div>
+
+
+            <!-- =================================================
+                 SISTEMA
+            ================================================== -->
 
             <div class="nav-group">
-                <span class="nav-group-title">Sistema</span>
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="vendas"
-                        data-title="Vendas"
-                        data-subtitle="Registre e acompanhe as vendas do mercadinho">
-                    <span class="nav-icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                    <span class="nav-label">Vendas</span>
-                </button>
+                <span class="nav-group-title">
+                    Sistema
+                </span>
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="estoque"
-                        data-title="Estoque"
-                        data-subtitle="Controle quantidades, reposição e produtos em falta">
-                    <span class="nav-icon"><i class="fa-solid fa-warehouse"></i></span>
-                    <span class="nav-label">Estoque</span>
-                </button>
 
-                <button class="nav-item"
-                        type="button"
-                        data-section="configuracoes"
-                        data-title="Configurações"
-                        data-subtitle="Configure o funcionamento do MercadoNex">
-                    <span class="nav-icon"><i class="fa-solid fa-gear"></i></span>
-                    <span class="nav-label">Configurações</span>
-                </button>
+                <!-- VENDAS -->
+
+                <a
+                    href="{% url 'vendas' %}"
+                    class="nav-item disabled-nav"
+                    data-page="vendas">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-cart-shopping"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Vendas
+                    </span>
+                </a>
+
+
+                <!-- ESTOQUE -->
+
+                <a
+                    href="#"
+                    class="nav-item disabled-nav"
+                    data-page="estoque">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-warehouse"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Estoque
+                    </span>
+
+                    <span class="nav-coming">
+                        Em breve
+                    </span>
+
+                </a>
+
+
+                <!-- CONFIGURAÇÕES -->
+
+                <a
+                    href="#"
+                    class="nav-item disabled-nav"
+                    data-page="configuracoes">
+
+                    <span class="nav-icon">
+
+                        <i class="fa-solid fa-gear"></i>
+
+                    </span>
+
+                    <span class="nav-label">
+                        Configurações
+                    </span>
+
+                    <span class="nav-coming">
+                        Em breve
+                    </span>
+
+                </a>
+
             </div>
+
         </nav>
 
-        <!-- =========================
+
+        <!-- =====================================================
              USUÁRIO
-        ========================== -->
+        ====================================================== -->
+
         <div class="sidebar-bottom">
 
             <div class="user-card">
+
                 <div class="user-avatar">
+
                     {{ request.user.first_name|default:request.user.username|first|upper }}
+
                 </div>
+
 
                 <div class="user-info">
-                    <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
-                    <span>Administrador</span>
+
+                    <strong>
+
+                        {{ request.user.get_full_name|default:request.user.username }}
+
+                    </strong>
+
+                    <span>
+                        Administrador
+                    </span>
+
                 </div>
 
-                <button class="user-menu-button" id="userMenuButton" type="button"
-                        aria-label="Abrir opções do usuário"
-                        aria-expanded="false">
+
+                <button
+                    class="user-menu-button"
+                    id="userMenuButton"
+                    type="button"
+                    aria-label="Abrir opções do usuário"
+                    aria-expanded="false">
+
                     <i class="fa-solid fa-ellipsis-vertical"></i>
+
                 </button>
+
             </div>
 
-            <div class="user-menu" id="userMenu">
-                <a href="#" class="user-menu-link">
+
+            <!-- MENU DO USUÁRIO -->
+
+            <div
+                class="user-menu"
+                id="userMenu">
+
+                <a
+                    href="#"
+                    class="user-menu-link">
+
                     <i class="fa-regular fa-user"></i>
-                    <span>Meu Perfil</span>
+
+                    <span>
+                        Meu Perfil
+                    </span>
+
                 </a>
 
-                <!-- Troque a URL abaixo caso sua rota de logout tenha outro nome -->
-                <a href="{% url 'logout' %}" class="user-menu-link logout-link">
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="user-menu-link logout-link">
+
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Sair</span>
+
+                    <span>
+                        Sair
+                    </span>
+
                 </a>
+
             </div>
 
         </div>
+
     </aside>
 
 
+    <!-- =====================================================
+         MAIN
+         IMPORTANTE:
+         Aqui entra o conteúdo de cada página.
+    ====================================================== -->
+
     <main class="main-content">
 
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
         <header class="topbar">
+
             <div class="topbar-left">
-                <button class="mobile-menu-button" id="mobileMenuButton" type="button"
-                        aria-label="Abrir menu">
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Abrir menu">
+
                     <i class="fa-solid fa-bars"></i>
+
                 </button>
 
-                <div class="page-heading" id="pageHeading">
-                    <h1 id="pageTitle">Painel Inicial</h1>
-                    <p id="pageSubtitle">Visão geral do seu mercadinho</p>
+
+                <div
+                    class="page-heading"
+                    id="pageHeading">
+
+                    {% block cabecalho %}
+
+                    <h1 id="pageTitle">
+                        MercadoNex
+                    </h1>
+
+                    <p id="pageSubtitle">
+                        Sistema de gestão do seu mercadinho
+                    </p>
+
+                    {% endblock %}
+
                 </div>
+
             </div>
+
 
             <div class="topbar-actions">
-                <button class="notification-button" type="button" aria-label="Notificações">
+
+                <button
+                    class="notification-button"
+                    type="button"
+                    aria-label="Notificações">
+
                     <i class="fa-regular fa-bell"></i>
+
                     <span class="notification-dot"></span>
+
                 </button>
+
             </div>
+
         </header>
+
+
+        <!-- =================================================
+             CONTEÚDO DA PÁGINA
+        ================================================== -->
 
         <div class="content-area">
 
-            <!-- =========================
-                 DASHBOARD
-            ========================== -->
-            <section class="content-section active" id="section-dashboard" data-section="dashboard">
-
-                <div class="section-intro">
-                    <div>
-                        <span class="eyebrow">RESUMO</span>
-                        <h2>Visão geral</h2>
-                        <p>Acompanhe os principais indicadores do seu mercadinho.</p>
-                    </div>
-
-                    <button class="primary-button" type="button">
-                        <i class="fa-solid fa-plus"></i>
-                        Nova venda
-                    </button>
-                </div>
-
-                <div class="stats-grid">
-
-                    <article class="stat-card">
-                        <div class="stat-top">
-                            <span>Receita hoje</span>
-                            <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
-                        </div>
-                        <strong>R$ 2.847,50</strong>
-                        <small class="positive">+12,4% <span>vs. ontem</span></small>
-                    </article>
-
-                    <article class="stat-card">
-                        <div class="stat-top">
-                            <span>Vendas do mês</span>
-                            <div class="stat-icon"><i class="fa-solid fa-chart-column"></i></div>
-                        </div>
-                        <strong>R$ 68.320,00</strong>
-                        <small class="positive">+8,1% <span>vs. mês anterior</span></small>
-                    </article>
-
-                    <article class="stat-card">
-                        <div class="stat-top">
-                            <span>Clientes ativos</span>
-                            <div class="stat-icon"><i class="fa-solid fa-user-group"></i></div>
-                        </div>
-                        <strong>1.243</strong>
-                        <small class="positive">+34 <span>novos esta semana</span></small>
-                    </article>
-
-                    <article class="stat-card">
-                        <div class="stat-top">
-                            <span>Itens em falta</span>
-                            <div class="stat-icon warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                        </div>
-                        <strong>17</strong>
-                        <small class="negative">-3 <span>vs. ontem</span></small>
-                    </article>
-
-                </div>
-
-                <div class="dashboard-grid">
-
-                    <article class="panel-card sales-panel">
-                        <div class="panel-header">
-                            <div>
-                                <h3>Vendas recentes</h3>
-                                <p>Últimas vendas realizadas</p>
-                            </div>
-                            <button class="text-button" type="button">Ver todas</button>
-                        </div>
-
-                        <div class="table-wrapper">
-                            <table class="sales-table">
-                                <thead>
-                                    <tr>
-                                        <th>Pedido</th>
-                                        <th>Cliente</th>
-                                        <th>Itens</th>
-                                        <th>Total</th>
-                                        <th>Hora</th>
-                                        <th>Pagamento</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><span class="order-number">#4821</span></td>
-                                        <td>Maria Souza</td>
-                                        <td>7</td>
-                                        <td><strong>R$ 134,80</strong></td>
-                                        <td>14:32</td>
-                                        <td><span class="payment pix">PIX</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="order-number">#4820</span></td>
-                                        <td>João Pereira</td>
-                                        <td>3</td>
-                                        <td><strong>R$ 47,20</strong></td>
-                                        <td>14:18</td>
-                                        <td><span class="payment debit">Débito</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="order-number">#4819</span></td>
-                                        <td>Ana Lima</td>
-                                        <td>12</td>
-                                        <td><strong>R$ 218,60</strong></td>
-                                        <td>13:55</td>
-                                        <td><span class="payment credit">Crédito</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="order-number">#4818</span></td>
-                                        <td>Carlos Neto</td>
-                                        <td>5</td>
-                                        <td><strong>R$ 89,40</strong></td>
-                                        <td>13:41</td>
-                                        <td><span class="payment cash">Dinheiro</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="order-number">#4817</span></td>
-                                        <td>Fernanda Costa</td>
-                                        <td>2</td>
-                                        <td><strong>R$ 28,90</strong></td>
-                                        <td>13:20</td>
-                                        <td><span class="payment pix">PIX</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </article>
-
-                    <article class="panel-card">
-                        <div class="panel-header">
-                            <div>
-                                <h3>Mais vendidos</h3>
-                                <p>Produtos com maior saída</p>
-                            </div>
-                        </div>
-
-                        <div class="ranking-list">
-                            <div class="ranking-item">
-                                <span class="ranking-position">1</span>
-                                <div class="ranking-info">
-                                    <strong>Arroz Tipo 1 5kg</strong>
-                                    <small>Grãos · 61 un.</small>
-                                </div>
-                                <b>R$ 854,00</b>
-                            </div>
-
-                            <div class="ranking-item">
-                                <span class="ranking-position">2</span>
-                                <div class="ranking-info">
-                                    <strong>Refrigerante 2L</strong>
-                                    <small>Bebidas · 49 un.</small>
-                                </div>
-                                <b>R$ 588,00</b>
-                            </div>
-
-                            <div class="ranking-item">
-                                <span class="ranking-position">3</span>
-                                <div class="ranking-info">
-                                    <strong>Pão de Forma</strong>
-                                    <small>Padaria · 57 un.</small>
-                                </div>
-                                <b>R$ 456,00</b>
-                            </div>
-
-                            <div class="ranking-item">
-                                <span class="ranking-position">4</span>
-                                <div class="ranking-info">
-                                    <strong>Óleo de Soja 900ml</strong>
-                                    <small>Mercearia · 43 un.</small>
-                                </div>
-                                <b>R$ 387,00</b>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-
-                <div class="stock-alert">
-                    <div class="stock-alert-header">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                        <strong>Estoque baixo</strong>
-                        <span>4 itens precisam de reposição</span>
-                    </div>
-
-                    <div class="stock-items">
-                        <button type="button" class="stock-item">
-                            <strong>Feijão Preto 1kg</strong>
-                            <span class="stock-current">4 un.</span>
-                            <small>mín. 20</small>
-                        </button>
-
-                        <button type="button" class="stock-item">
-                            <strong>Óleo de Soja 900ml</strong>
-                            <span class="stock-current">9 un.</span>
-                            <small>mín. 30</small>
-                        </button>
-
-                        <button type="button" class="stock-item">
-                            <strong>Arroz Tipo 1 5kg</strong>
-                            <span class="stock-current">18 un.</span>
-                            <small>mín. 40</small>
-                        </button>
-
-                        <button type="button" class="stock-item">
-                            <strong>Açúcar Cristal 1kg</strong>
-                            <span class="stock-current">11 un.</span>
-                            <small>mín. 25</small>
-                        </button>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- =========================
-                 OUTRAS SEÇÕES
-            ========================== -->
-            <section class="content-section placeholder-section" id="section-produtos" data-section="produtos">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-box"></i></div>
-                    <span class="eyebrow">MÓDULO</span>
-                    <h2>Gestão de Produtos</h2>
-                    <p>Esta área está pronta para receber o CRUD de produtos do MercadoNex.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-clientes" data-section="clientes">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-users"></i></div>
-                    <span class="eyebrow">MÓDULO</span>
-                    <h2>Gestão de Clientes</h2>
-                    <p>Área preparada para o gerenciamento de clientes e fiado.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-financeiro" data-section="financeiro">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-chart-line"></i></div>
-                    <span class="eyebrow">MÓDULO</span>
-                    <h2>Controle Financeiro</h2>
-                    <p>Aqui entrarão fluxo de caixa, receitas, despesas e indicadores financeiros.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-relatorios" data-section="relatorios">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-file-chart-column"></i></div>
-                    <span class="eyebrow">MÓDULO</span>
-                    <h2>Relatórios Inteligentes</h2>
-                    <p>Área preparada para relatórios de vendas, estoque, clientes e financeiro.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-vendas" data-section="vendas">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <span class="eyebrow">SISTEMA</span>
-                    <h2>Vendas</h2>
-                    <p>Área preparada para o fluxo de registro e acompanhamento das vendas.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-estoque" data-section="estoque">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-warehouse"></i></div>
-                    <span class="eyebrow">SISTEMA</span>
-                    <h2>Estoque</h2>
-                    <p>Área preparada para controle de estoque, reposição e produtos em falta.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
-
-            <section class="content-section placeholder-section" id="section-configuracoes" data-section="configuracoes">
-                <div class="empty-state">
-                    <div class="empty-icon"><i class="fa-solid fa-gear"></i></div>
-                    <span class="eyebrow">SISTEMA</span>
-                    <h2>Configurações</h2>
-                    <p>Área preparada para as configurações gerais do MercadoNex.</p>
-                    <button class="primary-button" type="button" data-back-dashboard>Voltar ao painel</button>
-                </div>
-            </section>
+            {% block conteudo %}
+            {% endblock %}
 
         </div>
+
     </main>
+
 </div>
 
-<!-- Font Awesome para os ícones -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"></script>
-<script src="{% static 'js/dashboard.js' %}"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js">
+</script>
+<script
+    src="{% static 'js/dashboard.js' %}">
+</script>
+
+
+{% block scripts %}
+{% endblock %}
+
+
 </body>
+
 </html>
