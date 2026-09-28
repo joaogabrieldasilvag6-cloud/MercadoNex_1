@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function novoProduto(){
         if(!form)return;
         form.reset(); form.action="/produtos/cadastrar/";
-        if(modalTitulo) modalTitulo.textContent="Novo Produto";
+        if(modalTitulo) modalTitulo.innerHTML='<i class="fa-solid fa-box"></i> Novo Produto';
         if(modalSubtitle) modalSubtitle.textContent="Preencha os dados abaixo para cadastrar o produto.";
         if(btnSalvar) btnSalvar.innerHTML='<i class="fa-regular fa-floppy-disk"></i><span>Salvar Produto</span>';
         if(form.elements["status"]) form.elements["status"].checked=true;
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ["nome","categoria","descricao","codigo","marca","preco_venda","preco_custo","quantidade","validade","fornecedor"].forEach(nome=>{if(form.elements[nome])form.elements[nome].value=produto[nome]??"";});
             if(form.elements["status"]) form.elements["status"].checked=produto.status===true||produto.status===1||produto.status==="1";
             if(form.elements["destaque"]) form.elements["destaque"].checked=produto.destaque===true||produto.destaque===1||produto.destaque==="1";
-            if(modalTitulo) modalTitulo.textContent="Editar Produto";
+            if(modalTitulo) modalTitulo.innerHTML='<i class="fa-solid fa-pen"></i> Editar Produto';
             if(modalSubtitle) modalSubtitle.textContent="Atualize os dados do produto e salve as alterações.";
             if(btnSalvar) btnSalvar.innerHTML='<i class="fa-solid fa-pen"></i><span>Atualizar Produto</span>';
             limparPreview();

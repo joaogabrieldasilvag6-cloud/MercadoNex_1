@@ -4,10 +4,13 @@
     <div class="produto-modal-content" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitulo">
         <header class="produto-modal-header">
             <div>
-                <span class="produto-modal-eyebrow">MERCADONEX</span>
-                <h2 id="modalProdutoTitulo">Novo Produto</h2>
+                <h2 id="modalProdutoTitulo">
+                    <i class="fa-solid fa-box"></i>
+                    Novo Produto
+                </h2>
                 <p id="modalProdutoSubtitle">Preencha os dados abaixo para cadastrar o produto.</p>
             </div>
+
             <button type="button" class="produto-modal-close" id="btnFecharModal" aria-label="Fechar">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -17,12 +20,25 @@
             {% csrf_token %}
 
             <div class="produto-form-card">
-                <div class="produto-form-title"><i class="fa-solid fa-box"></i> Dados Gerais</div>
+                <div class="produto-form-title">
+                    <span class="produto-section-icon"><i class="fa-solid fa-box"></i></span>
+                    <div>
+                        <strong>Informações do produto</strong>
+                        <small>Dados básicos para identificação do produto</small>
+                    </div>
+                </div>
+
                 <div class="produto-form-grid">
-                    <div class="produto-field">
+                    <div class="produto-field full">
                         <label for="produto-nome">Nome do Produto <span>*</span></label>
                         <input id="produto-nome" type="text" name="nome" placeholder="Ex.: Arroz Tipo 1" required>
                     </div>
+
+                    <div class="produto-field">
+                        <label for="produto-codigo">Código <span>*</span></label>
+                        <input id="produto-codigo" type="text" name="codigo" placeholder="P001" required>
+                    </div>
+
                     <div class="produto-field">
                         <label for="produto-categoria">Categoria <span>*</span></label>
                         <select id="produto-categoria" name="categoria" required>
@@ -36,46 +52,67 @@
                             <option value="Hortifruti">Hortifruti</option>
                         </select>
                     </div>
-                    <div class="produto-field">
-                        <label for="produto-codigo">Código <span>*</span></label>
-                        <input id="produto-codigo" type="text" name="codigo" placeholder="P001" required>
-                    </div>
-                    <div class="produto-field">
+
+                    <div class="produto-field full">
                         <label for="produto-marca">Marca</label>
                         <input id="produto-marca" type="text" name="marca" placeholder="Marca do produto">
                     </div>
+
                     <div class="produto-field full">
                         <label for="produto-descricao">Descrição</label>
-                        <textarea id="produto-descricao" name="descricao" rows="4" placeholder="Descrição do produto..."></textarea>
+                        <textarea id="produto-descricao" name="descricao" placeholder="Descrição do produto..."></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="produto-form-card">
-                <div class="produto-form-title"><i class="fa-solid fa-wallet"></i> Valores</div>
+                <div class="produto-form-title">
+                    <span class="produto-section-icon wallet"><i class="fa-solid fa-wallet"></i></span>
+                    <div>
+                        <strong>Valores</strong>
+                        <small>Defina os preços de venda e de custo</small>
+                    </div>
+                </div>
+
                 <div class="produto-form-grid">
                     <div class="produto-field">
                         <label for="produto-preco-venda">Preço de Venda <span>*</span></label>
-                        <input id="produto-preco-venda" type="number" step="0.01" min="0" name="preco_venda" required>
+                        <div class="produto-money-field">
+                            <span>R$</span>
+                            <input id="produto-preco-venda" type="number" step="0.01" min="0" name="preco_venda" required>
+                        </div>
                     </div>
+
                     <div class="produto-field">
                         <label for="produto-preco-custo">Preço de Custo</label>
-                        <input id="produto-preco-custo" type="number" step="0.01" min="0" name="preco_custo">
+                        <div class="produto-money-field">
+                            <span>R$</span>
+                            <input id="produto-preco-custo" type="number" step="0.01" min="0" name="preco_custo">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="produto-form-card">
-                <div class="produto-form-title"><i class="fa-solid fa-boxes-stacked"></i> Estoque</div>
+                <div class="produto-form-title">
+                    <span class="produto-section-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+                    <div>
+                        <strong>Estoque</strong>
+                        <small>Controle a quantidade e validade do produto</small>
+                    </div>
+                </div>
+
                 <div class="produto-form-grid">
                     <div class="produto-field">
                         <label for="produto-quantidade">Quantidade em Estoque <span>*</span></label>
                         <input id="produto-quantidade" type="number" name="quantidade" min="0" required>
                     </div>
+
                     <div class="produto-field">
                         <label for="produto-validade">Data de Validade</label>
                         <input id="produto-validade" type="date" name="validade">
                     </div>
+
                     <div class="produto-field full">
                         <label for="produto-fornecedor">Fornecedor</label>
                         <input id="produto-fornecedor" type="text" name="fornecedor" placeholder="Nome do fornecedor">
@@ -84,7 +121,14 @@
             </div>
 
             <div class="produto-form-card">
-                <div class="produto-form-title"><i class="fa-regular fa-image"></i> Imagem do Produto</div>
+                <div class="produto-form-title">
+                    <span class="produto-section-icon image"><i class="fa-regular fa-image"></i></span>
+                    <div>
+                        <strong>Imagem do produto</strong>
+                        <small>Adicione uma foto para facilitar a identificação</small>
+                    </div>
+                </div>
+
                 <div class="produto-file-drop" id="fileDrop">
                     <input id="img-upload" type="file" name="imagem" accept="image/png,image/jpeg,image/webp">
                     <div class="produto-upload-content">
@@ -97,17 +141,31 @@
             </div>
 
             <div class="produto-form-card">
-                <div class="produto-form-title"><i class="fa-solid fa-sliders"></i> Configurações</div>
+                <div class="produto-form-title">
+                    <span class="produto-section-icon settings"><i class="fa-solid fa-sliders"></i></span>
+                    <div>
+                        <strong>Configurações</strong>
+                        <small>Defina como o produto será exibido e vendido</small>
+                    </div>
+                </div>
+
                 <div class="produto-toggle-grid">
                     <div class="produto-toggle-box">
-                        <div><strong>Produto disponível</strong><span>Permitir venda deste produto</span></div>
+                        <div>
+                            <strong>Produto disponível</strong>
+                            <span>Permitir venda deste produto</span>
+                        </div>
                         <label class="produto-switch">
                             <input type="checkbox" name="status" id="produto-status" checked>
                             <span></span>
                         </label>
                     </div>
+
                     <div class="produto-toggle-box">
-                        <div><strong>Produto em destaque</strong><span>Mostrar como destaque no sistema</span></div>
+                        <div>
+                            <strong>Produto em destaque</strong>
+                            <span>Mostrar como destaque no sistema</span>
+                        </div>
                         <label class="produto-switch">
                             <input type="checkbox" name="destaque" id="produto-destaque">
                             <span></span>
@@ -119,7 +177,7 @@
             <div class="produto-form-actions">
                 <button type="button" class="produto-btn-cancel" id="btnCancelarProduto">Cancelar</button>
                 <button type="submit" class="produto-btn-save" id="btnSalvarProduto">
-                    <i class="fa-regular fa-floppy-disk"></i>
+                    <i class="fa-solid fa-floppy-disk"></i>
                     <span id="btnSalvarTexto">Salvar Produto</span>
                 </button>
             </div>

@@ -3,16 +3,32 @@ from .models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from django.db import IntegrityError
-from django.db.models import Sum
+from django.views.decorators.http import require_POST
+from django.db import IntegrityError, transaction
+from django.db.models import Sum, Exists, OuterRef
+from decimal import Decimal
+from django.utils import timezone
+from apps.vendas.models import Venda
 
 
 @login_required
 def clientes(request):
 
-    clientes = Cliente.objects.all().order_by("-id")
+    hoje = timezone.localdate()
+    dividas_vencidas = Venda.objects.filter(
+        cliente=OuterRef("pk"),
+        forma_pagamento="FIADO",
+        status="FINALIZADA",
+        fiado_pago=False,
+        vencimento_fiado__lt=hoje,
+    )
+
+    clientes = Cliente.objects.annotate(
+        inadimplente=Exists(dividas_vencidas)
+    ).order_by("-id")
 
     clientes_ativos = clientes.filter(ativo_fiado=True).count()
+    clientes_inadimplentes = clientes.filter(ativo_fiado=True, inadimplente=True).count()
 
     clientes_bloqueados = clientes.filter(ativo_fiado=False).count()
 
@@ -24,6 +40,7 @@ def clientes(request):
         "clientes": clientes,
         "clientes_ativos": clientes_ativos,
         "clientes_bloqueados": clientes_bloqueados,
+        "clientes_inadimplentes": clientes_inadimplentes,
         "total_fiado": total_fiado,
     }
 
@@ -126,4 +143,39 @@ def cliente_json(request, id):
         "endereco": cliente.endereco,
         "limite_fiado": float(cliente.limite_fiado),
         "ativo_fiado": cliente.ativo_fiado,
+    })
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def quitar_fiado_cliente(request, id):
+    cliente = get_object_or_404(Cliente.objects.select_for_update(), id=id)
+    dividas = list(
+        Venda.objects.select_for_update().filter(
+            cliente=cliente,
+            forma_pagamento="FIADO",
+            status="FINALIZADA",
+            fiado_pago=False,
+        )
+    )
+
+    if not dividas:
+        return JsonResponse({"success": False, "erro": "Este cliente não possui fiado em aberto."}, status=400)
+
+    valor_pago = sum((Decimal(venda.valor_final or 0) for venda in dividas), Decimal("0.00"))
+    cliente.saldo_fiado = max(Decimal("0.00"), Decimal(cliente.saldo_fiado or 0) - valor_pago)
+    cliente.save(update_fields=["saldo_fiado"])
+
+    agora = timezone.now()
+    Venda.objects.filter(id__in=[v.id for v in dividas]).update(
+        fiado_pago=True,
+        data_pagamento_fiado=agora,
+    )
+
+    return JsonResponse({
+        "success": True,
+        "cliente": cliente.nome,
+        "valor_pago": str(valor_pago),
+        "novo_saldo_fiado": str(cliente.saldo_fiado),
     })

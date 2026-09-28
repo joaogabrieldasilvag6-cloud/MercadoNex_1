@@ -1,0 +1,234 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block titulo %}Relatórios - MercadoNex{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/relatorios.css' %}">
+{% endblock %}
+
+{% block cabecalho %}
+<div class="page-heading" id="pageHeading">
+    <h1 id="pageTitle">Relatórios</h1>
+    <p id="pageSubtitle">Indicadores quantitativos do seu mercadinho</p>
+</div>
+{% endblock %}
+
+{% block conteudo %}
+<section class="relatorios-page">
+
+    <div class="relatorios-topbar">
+        <div>
+            <span class="relatorios-eyebrow">ANÁLISE QUANTITATIVA</span>
+            <h2>Relatórios gerenciais</h2>
+            <p>Consulte vendas, produtos, estoque, clientes e fiado em um único lugar.</p>
+        </div>
+
+        <div class="periodo-box">
+            <form method="get" id="periodoForm">
+                <label for="periodo">Período</label>
+                <div class="periodo-controls">
+                    <select id="periodo" name="periodo">
+                        <option value="hoje" {% if periodo == 'hoje' %}selected{% endif %}>Hoje</option>
+                        <option value="7" {% if periodo == '7' %}selected{% endif %}>Últimos 7 dias</option>
+                        <option value="30" {% if periodo == '30' %}selected{% endif %}>Últimos 30 dias</option>
+                        <option value="mes" {% if periodo == 'mes' %}selected{% endif %}>Mês atual</option>
+                        <option value="custom" {% if periodo == 'custom' %}selected{% endif %}>Personalizado</option>
+                    </select>
+                    <button type="submit" class="periodo-aplicar"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+                </div>
+
+                <div class="periodo-customo" id="periodoCustomo" {% if periodo != 'custom' %}hidden{% endif %}>
+                    <label for="inicio">De</label>
+                    <input type="date" id="inicio" name="inicio" value="{{ inicio }}">
+                    <label for="fim">Até</label>
+                    <input type="date" id="fim" name="fim" value="{{ fim }}">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="periodo-info">
+        <i class="fa-regular fa-calendar"></i>
+        <span>Período analisado:</span>
+        <strong>{{ inicio_formatado }} a {{ fim_formatado }}</strong>
+    </div>
+
+    <div class="relatorio-cards">
+        <article class="relatorio-card">
+            <div class="relatorio-card-icon green"><i class="fa-solid fa-wallet"></i></div>
+            <div><span>Faturamento</span><strong>R$ {{ faturamento|floatformat:2 }}</strong><small>{{ quantidade_vendas }} venda{{ quantidade_vendas|pluralize }} no período</small></div>
+        </article>
+
+        <article class="relatorio-card">
+            <div class="relatorio-card-icon blue"><i class="fa-solid fa-chart-line"></i></div>
+            <div><span>Ticket médio</span><strong>R$ {{ ticket_medio|floatformat:2 }}</strong><small>média por venda finalizada</small></div>
+        </article>
+
+        <article class="relatorio-card">
+            <div class="relatorio-card-icon purple"><i class="fa-solid fa-box"></i></div>
+            <div><span>Unidades vendidas</span><strong>{{ unidades_vendidas }}</strong><small>itens registrados no período</small></div>
+        </article>
+
+        <article class="relatorio-card">
+            <div class="relatorio-card-icon yellow"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div><span>Fiado em aberto</span><strong>R$ {{ total_fiado|floatformat:2 }}</strong><small>{{ clientes_fiado }} cliente{{ clientes_fiado|pluralize }} com saldo</small></div>
+        </article>
+    </div>
+
+    <div class="relatorios-grid">
+        <article class="relatorio-panel vendas-periodo-panel">
+            <div class="panel-title-row">
+                <div>
+                    <span class="panel-eyebrow">VENDAS</span>
+                    <h3>Movimento do período</h3>
+                    <p>Faturamento diário das vendas finalizadas.</p>
+                </div>
+                <span class="panel-total">R$ {{ faturamento|floatformat:2 }}</span>
+            </div>
+
+            <div class="vendas-chart" aria-label="Faturamento por dia">
+                {% for dia in vendas_por_dia %}
+                <div class="barra-dia">
+                    <div class="barra-wrap">
+                        <div class="barra" style="height:{{ dia.percentual }}%;" title="{{ dia.rotulo }} — R$ {{ dia.valor|floatformat:2 }}"></div>
+                    </div>
+                    <strong>{{ dia.dia_semana }}</strong>
+                    <small>{{ dia.rotulo_curto }}</small>
+                </div>
+                {% empty %}
+                <div class="grafico-vazio">Não há vendas finalizadas no período selecionado.</div>
+                {% endfor %}
+            </div>
+
+            <div class="vendas-resumo">
+                <div><span>Maior faturamento diário</span><strong>R$ {{ maior_dia.valor|floatformat:2 }}</strong><small>{{ maior_dia.rotulo }}</small></div>
+                <div><span>Vendas</span><strong>{{ quantidade_vendas }}</strong><small>operações finalizadas</small></div>
+                <div><span>Descontos</span><strong>R$ {{ descontos|floatformat:2 }}</strong><small>valor concedido</small></div>
+            </div>
+        </article>
+
+        <article class="relatorio-panel pagamentos-panel">
+            <div class="panel-title-row">
+                <div>
+                    <span class="panel-eyebrow">PAGAMENTOS</span>
+                    <h3>Formas de pagamento</h3>
+                    <p>Distribuição financeira do período selecionado.</p>
+                </div>
+            </div>
+
+            <div class="pagamentos-list">
+                {% for pagamento in pagamentos %}
+                <div class="pagamento-item">
+                    <div class="pagamento-label"><strong>{{ pagamento.nome }}</strong><span>{{ pagamento.percentual|floatformat:1 }}%</span></div>
+                    <div class="pagamento-track"><div class="pagamento-fill {{ pagamento.classe }}" style="width:{{ pagamento.percentual }}%;"></div></div>
+                    <small>R$ {{ pagamento.valor|floatformat:2 }}</small>
+                </div>
+                {% empty %}
+                <div class="grafico-vazio">Nenhuma venda finalizada no período.</div>
+                {% endfor %}
+            </div>
+
+            <div class="fiado-box">
+                <div><i class="fa-solid fa-book"></i></div>
+                <span>Clientes inadimplentes</span>
+                <strong>{{ clientes_inadimplentes }}</strong>
+            </div>
+        </article>
+
+        <article class="relatorio-panel">
+            <div class="panel-title-row">
+                <div>
+                    <span class="panel-eyebrow">PRODUTOS</span>
+                    <h3>Mais vendidos</h3>
+                    <p>Produtos com maior volume de unidades no período.</p>
+                </div>
+                <span class="panel-badge">Top {{ produtos_mais_vendidos|length }}</span>
+            </div>
+
+            <div class="ranking-report">
+                {% for produto in produtos_mais_vendidos %}
+                <div class="ranking-report-item">
+                    <span class="rank">{{ forloop.counter }}</span>
+                    <div class="ranking-report-info">
+                        <strong>{{ produto.nome }}</strong>
+                        <small>{{ produto.categoria|default:'Sem categoria' }} · {{ produto.unidades }} un.</small>
+                    </div>
+                    <b>R$ {{ produto.faturamento|floatformat:2 }}</b>
+                </div>
+                {% empty %}
+                <div class="grafico-vazio">Nenhum produto vendido no período.</div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="relatorio-panel">
+            <div class="panel-title-row">
+                <div>
+                    <span class="panel-eyebrow">ESTOQUE</span>
+                    <h3>Alertas quantitativos</h3>
+                    <p>Indicadores que merecem acompanhamento.</p>
+                </div>
+            </div>
+
+            <div class="alertas-list">
+                <div class="alerta-item danger">
+                    <div class="alerta-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div><strong>Estoque zerado</strong><span>{{ estoque_zerado }} produto{{ estoque_zerado|pluralize }} sem unidades disponíveis.</span></div>
+                </div>
+                <div class="alerta-item warning">
+                    <div class="alerta-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div><strong>Estoque baixo</strong><span>{{ estoque_baixo }} produto{{ estoque_baixo|pluralize }} com até 10 unidades.</span></div>
+                </div>
+                <div class="alerta-item purple">
+                    <div class="alerta-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                    <div><strong>Baixo giro</strong><span>{{ baixo_giro }} produto{{ baixo_giro|pluralize }} não teve venda no período.</span></div>
+                </div>
+                <div class="alerta-item green">
+                    <div class="alerta-icon"><i class="fa-solid fa-user-group"></i></div>
+                    <div><strong>Novos clientes</strong><span>{{ novos_clientes }} cliente{{ novos_clientes|pluralize }} cadastrado{{ novos_clientes|pluralize }} no período.</span></div>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <section class="export-panel">
+        <div class="export-heading">
+            <div>
+                <span class="panel-eyebrow">EXPORTAÇÃO</span>
+                <h3>Exportar relatórios</h3>
+                <p>Baixe os dados quantitativos para análise ou apresentação.</p>
+            </div>
+            <button type="button" class="print-button" id="btnImprimir"><i class="fa-solid fa-print"></i> Imprimir</button>
+        </div>
+
+        <div class="export-grid">
+            <a href="{% url 'relatorios_exportar_vendas' %}?periodo={{ periodo }}&inicio={{ inicio }}&fim={{ fim }}" class="export-card">
+                <span class="export-icon"><i class="fa-regular fa-file-lines"></i></span>
+                <span><strong>Vendas do período</strong><small>{{ quantidade_vendas }} transaç{{ quantidade_vendas|pluralize:'ão,ões' }}</small></span>
+                <i class="fa-solid fa-download"></i>
+            </a>
+            <a href="{% url 'relatorios_exportar_produtos' %}?periodo={{ periodo }}&inicio={{ inicio }}&fim={{ fim }}" class="export-card">
+                <span class="export-icon"><i class="fa-regular fa-file-lines"></i></span>
+                <span><strong>Produtos mais vendidos</strong><small>Ranking por unidades</small></span>
+                <i class="fa-solid fa-download"></i>
+            </a>
+            <a href="{% url 'relatorios_exportar_estoque' %}" class="export-card">
+                <span class="export-icon"><i class="fa-regular fa-file-lines"></i></span>
+                <span><strong>Controle de estoque</strong><small>{{ produtos_ativos }} produtos ativos</small></span>
+                <i class="fa-solid fa-download"></i>
+            </a>
+            <a href="{% url 'relatorios_exportar_clientes' %}" class="export-card">
+                <span class="export-icon"><i class="fa-regular fa-file-lines"></i></span>
+                <span><strong>Clientes e fiado</strong><small>{{ clientes_total }} clientes cadastrados</small></span>
+                <i class="fa-solid fa-download"></i>
+            </a>
+        </div>
+    </section>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/relatorios.js' %}"></script>
+{% endblock %}

@@ -46,20 +46,20 @@
                     {% if produto.quantidade == 0 %}
                         {% with estoque_classe='stock-red' estoque_texto='Sem estoque' %}
                             <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
-                                <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag {{ estoque_classe }}">{{ estoque_texto }}</span></div>
+                                <div class="product-top"><span class="product-image"> {% if produto.imagem %} <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">{% else %} <span>🛒</span> </span> {% endif %} <span class="stock-tag stock-green">{{ produto.quantidade }} em estoque</span></div> 
                                 <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
-                                <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product" disabled>Indisponível</button></div>
+                                <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product" disabled>Indisponível</button></div>                          
                             </article>
                         {% endwith %}
                     {% elif produto.quantidade <= 10 %}
                         <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
-                            <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag stock-yellow">{{ produto.quantidade }} em estoque</span></div>
+                            <div class="product-top"><span class="product-image"> {% if produto.imagem %} <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">{% else %} <span>🛒</span> </span> {% endif %} <span class="stock-tag stock-green">{{ produto.quantidade }} em estoque</span></div>
                             <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
                             <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product">Adicionar</button></div>
                         </article>
                     {% else %}
                         <article class="product-card" data-id="{{ produto.id }}" data-name="{{ produto.nome|lower|escape }}" data-code="{{ produto.codigo|lower|escape }}" data-category="{{ produto.categoria|escape }}" data-price="{{ produto.preco_venda }}" data-stock="{{ produto.quantidade }}">
-                            <div class="product-top"><span class="product-emoji">{{ produto.emoji|default:'🛒' }}</span><span class="stock-tag stock-green">{{ produto.quantidade }} em estoque</span></div>
+                            <div class="product-top"><span class="product-image"> {% if produto.imagem %} <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">{% else %} <span>🛒</span> </span> {% endif %} <span class="stock-tag stock-green">{{ produto.quantidade }} em estoque</span></div> 
                             <div class="product-info"><span class="product-category">{{ produto.categoria }}</span><h3>{{ produto.nome }}</h3><small>Cód. {{ produto.codigo }}</small></div>
                             <div class="product-bottom"><strong>R$ {{ produto.preco_venda|floatformat:2 }}</strong><button type="button" class="add-product">Adicionar</button></div>
                         </article>

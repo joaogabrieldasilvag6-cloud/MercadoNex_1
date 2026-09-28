@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (existing.quantity >= stock) return;
             existing.quantity += 1;
         } else {
-            cart.push({ id, name: card.querySelector("h3").textContent.trim(), code: card.dataset.code, price: Number(card.dataset.price), quantity: 1, stock });
+            cart.push({ id, name: card.querySelector("h3").textContent.trim(), code: card.dataset.code, price: Number(String(card.dataset.price).replace(",", ".")), quantity: 1, stock });
         }
         renderCart();
     }

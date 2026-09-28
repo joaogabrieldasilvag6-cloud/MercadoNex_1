@@ -16,6 +16,7 @@ class Produto(models.Model):
     destaque = models.BooleanField(default=False)
     data_cadastro = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
+    imagem = models.ImageField(upload_to='produtos/', blank=True, null=True)
 
 
     def __str__(self):

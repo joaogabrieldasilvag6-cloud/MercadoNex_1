@@ -89,28 +89,41 @@ def editar_produto(request, id):
         produto.descricao = request.POST.get("descricao", "").strip()
         produto.codigo = request.POST.get("codigo", "").strip()
         produto.marca = request.POST.get("marca", "").strip()
+
         produto.preco_venda = request.POST.get("preco_venda") or 0
         produto.preco_custo = request.POST.get("preco_custo") or None
         produto.quantidade = request.POST.get("quantidade") or 0
         produto.validade = request.POST.get("validade") or None
+
         produto.fornecedor = request.POST.get("fornecedor", "").strip()
+
         produto.status = bool(request.POST.get("status"))
         produto.destaque = bool(request.POST.get("destaque"))
+
         if request.FILES.get("imagem"):
             produto.imagem = request.FILES["imagem"]
+
         produto.save()
+
         messages.success(request, "Produto atualizado com sucesso!")
+
         return redirect("produtos")
 
-    produtos_queryset = Produto.objects.all().order_by("-id")
-    context = {
-        "produtos": produtos_queryset,
-        "produto_edicao": produto,
-        "total_produtos": Produto.objects.count(),
-        "estoque_baixo": Produto.objects.filter(quantidade__gt=0, quantidade__lte=10).count(),
-        "sem_estoque": Produto.objects.filter(quantidade=0).count(),
-    }
-    return render(request, "produtos/produtos.html", context)
+    return JsonResponse({
+        "id": produto.id,
+        "nome": produto.nome,
+        "categoria": produto.categoria,
+        "descricao": produto.descricao,
+        "codigo": produto.codigo,
+        "marca": produto.marca,
+        "preco_venda": str(produto.preco_venda),
+        "preco_custo": str(produto.preco_custo or ""),
+        "quantidade": produto.quantidade,
+        "validade": produto.validade.strftime("%Y-%m-%d") if produto.validade else "",
+        "fornecedor": produto.fornecedor,
+        "status": produto.status,
+        "destaque": produto.destaque,
+    })
 
 
 @login_required
@@ -130,7 +143,6 @@ def produto_json(request, id):
         "fornecedor": produto.fornecedor or "",
         "status": produto.status,
         "destaque": produto.destaque,
-        "imagem": produto.imagem.url if produto.imagem else "",
     })
 
 

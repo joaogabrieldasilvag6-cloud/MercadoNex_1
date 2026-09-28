@@ -7,453 +7,230 @@ Gestão de Clientes - MercadoNex
 
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'css/clientes.css' %}">
- <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 {% endblock %}
 
 {% block conteudo %}
-
 <section class="clientes-page">
-
-    <!-- Cabeçalho -->
-   <div class="clientes-header">
-
+    <div class="clientes-header">
         <div>
-
-            <h1>
-                <i class="fa-solid fa-users"></i>
-                Gestão de Clientes
-            </h1>
-
-            <p>
-                Cadastre, edite e acompanhe todos os clientes do MercadoNex.
-            </p>
-
+            <h1>Gestão de Clientes</h1>
+            <p>Gerencie cadastros, fiado e situação dos seus clientes</p>
         </div>
-
-        <button
-            id="btnNovoCliente"
-            class="btn-novo-cliente">
-
-            <i class="fa-solid fa-user-plus"></i>
-
+        <button type="button" id="btnNovoCliente" class="btn-novo-cliente">
+            <i class="fa-solid fa-plus"></i>
             Novo Cliente
-
         </button>
-
     </div>
 
-   <!-- ====================================== -->
-<!-- CARDS -->
-<!-- ====================================== -->
-
-<div class="clientes-cards">
-
-    <div class="cliente-card">
-
-        <div class="card-icon blue">
-            <i class="fa-solid fa-users"></i>
-        </div>
-
-        <div class="card-info">
-            <span>Total de Clientes</span>
-            <h2>{{ clientes|length }}</h2>
-        </div>
-
-    </div>
-
-    <div class="cliente-card">
-
-            <div class="card-icon green">
-                <i class="fa-solid fa-circle-check"></i>
+    <div class="clientes-cards">
+        <article class="cliente-card">
+            <div class="card-icon purple"><i class="fa-solid fa-users"></i></div>
+            <div class="card-info">
+                <span>Total de Clientes</span>
+                <h2 id="totalClientes">{{ clientes|length }}</h2>
             </div>
+        </article>
 
+        <article class="cliente-card">
+            <div class="card-icon green"><i class="fa-solid fa-circle-check"></i></div>
             <div class="card-info">
                 <span>Clientes Ativos</span>
-                <h2>{{ clientes_ativos }}</h2>
+                <h2 id="clientesAtivos">{{ clientes_ativos }}</h2>
             </div>
+        </article>
 
-        </div>
-
-        <div class="cliente-card">
-
-            <div class="card-icon red">
-                <i class="fa-solid fa-ban"></i>
-            </div>
-
+        <article class="cliente-card">
+            <div class="card-icon yellow"><i class="fa-solid fa-triangle-exclamation"></i></div>
             <div class="card-info">
-                <span>Bloqueados</span>
-                <h2>{{ clientes_bloqueados }}</h2>
+                <span>Inadimplentes</span>
+                <h2 id="clientesInadimplentes">{{ clientes_inadimplentes }}</h2>
             </div>
+        </article>
 
-        </div>
-
-        <div class="cliente-card">
-
-            <div class="card-icon orange">
-                <i class="fa-solid fa-money-bill-wave"></i>
-            </div>
-
+        <article class="cliente-card">
+            <div class="card-icon blue"><i class="fa-solid fa-credit-card"></i></div>
             <div class="card-info">
-                <span>Fiado Total</span>
-                <h2>R$ {{ total_fiado }}</h2>
+                <span>Total em Fiado</span>
+                <h2 class="fiado-total">R$ {{ total_fiado }}</h2>
             </div>
-
-        </div>
-
+        </article>
     </div>
-    <!-- Barra -->
+
     <div class="clientes-toolbar">
-
         <div class="search-box">
-
             <i class="fa-solid fa-magnifying-glass"></i>
-
-            <input
-                type="text"
-                id="buscarCliente"
-                placeholder="Buscar cliente por nome, CPF ou telefone...">
-
+            <input type="text" id="buscarCliente" placeholder="Buscar por nome, CPF ou telefone..." autocomplete="off">
         </div>
 
+        <div class="status-filters" role="tablist" aria-label="Filtrar clientes">
+            <button type="button" class="status-filter active" data-filter="todos">Todos</button>
+            <button type="button" class="status-filter" data-filter="ativo">Ativo</button>
+            <button type="button" class="status-filter" data-filter="inadimplente">Inadimplente</button>
+            <button type="button" class="status-filter" data-filter="bloqueado">Bloqueado</button>
+        </div>
+
+        <span class="result-count" id="resultCount">{{ clientes|length }} resultados</span>
     </div>
 
-    <!-- Tabela -->
-
-    <div class="clientes-table">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Cliente</th>
-                    <th>Telefone</th>
-                    <th>Email</th>
-                    <th>Saldo</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="clientes-tbody">
-
-                {% for cliente in clientes %}
-
-                <tr>
-
-                    <td>
-
-                        <strong>{{ cliente.nome }}</strong>
-
-                    </td>
-
-                    <td>{{ cliente.telefone }}</td>
-
-                    <td>{{ cliente.email }}</td>
-
-                    <td>
-
-                        R$ {{ cliente.saldo_fiado }}
-
-                    </td>
-
-                    <td>
-
-                        {% if cliente.ativo_fiado %}
-
-                        <span class="status ativo">
-
-                            Ativo
-
-                        </span>
-
-                        {% else %}
-
-                        <span class="status bloqueado">
-
-                            Bloqueado
-
-                        </span>
-
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-
-                        <div class="acoes">
-
-                            <button
-                                class="btn-editar"
-                                onclick="editarCliente({{ cliente.id }})">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-
-                            <button
-                                class="btn-excluir"
-                                onclick="removerCliente({{ cliente.id }})">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="6" class="sem-registros">
-
-                        Nenhum cliente cadastrado.
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+    <div class="clientes-table-card">
+        <div class="table-scroll">
+            <table class="clientes-table">
+                <thead>
+                    <tr>
+                        <th>NOME / CONTATO</th>
+                        <th>CPF</th>
+                        <th>ENDEREÇO</th>
+                        <th>SALDO FIADO</th>
+                        <th>STATUS</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody id="clientes-tbody">
+                    {% for cliente in clientes %}
+                    <tr class="cliente-row"
+                        data-id="{{ cliente.id }}"
+                        data-status="{% if not cliente.ativo_fiado %}bloqueado{% elif cliente.inadimplente %}inadimplente{% else %}ativo{% endif %}"
+                        data-search="{{ cliente.nome }} {{ cliente.cpf }} {{ cliente.telefone }}">
+                        <td>
+                            <div class="cliente-identidade">
+                                <strong>{{ cliente.nome }}</strong>
+                                <span>
+                                    {{ cliente.telefone|default:"Sem telefone" }}
+                                    <b>•</b>
+                                    {{ cliente.email|default:"Sem e-mail" }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{ cliente.cpf|default:"—" }}</td>
+                        <td>{{ cliente.endereco|default:"—" }}</td>
+                        <td>
+                            <span class="saldo {% if cliente.saldo_fiado|default:0 > 0 %}saldo-devedor{% else %}saldo-zero{% endif %}">
+                                R$ {{ cliente.saldo_fiado|default:"0,00" }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if not cliente.ativo_fiado %}
+                                <span class="status status-bloqueado"><i></i>Bloqueado</span>
+                            {% elif cliente.inadimplente %}
+                                <span class="status status-inadimplente"><i></i>Inadimplente</span>
+                            {% else %}
+                                <span class="status status-ativo"><i></i>Ativo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="acoes">
+                                <button type="button" class="acao-btn editar" title="Editar cliente" onclick="editarCliente({{ cliente.id }})">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                {% if cliente.saldo_fiado|default:0 > 0 %}
+                                <button type="button" class="acao-btn quitar-fiado" title="Quitar fiado" onclick="quitarFiadoCliente({{ cliente.id }})">
+                                    <i class="fa-solid fa-wallet"></i>
+                                </button>
+                                {% endif %}
+                                <button type="button" class="acao-btn excluir" title="Excluir cliente" onclick="removerCliente({{ cliente.id }})">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="semRegistros">
+                        <td colspan="6" class="sem-registros">
+                            <i class="fa-solid fa-users"></i>
+                            <strong>Nenhum cliente cadastrado.</strong>
+                            <span>Cadastre o primeiro cliente para começar.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </section>
 
-<!-- =======================================================
-     MODAL DE CLIENTES
-======================================================= -->
-
-<div class="modal" id="modalCliente">
-
-    <div class="modal-cliente">
-
-        <!-- Cabeçalho -->
-
+<div class="modal" id="modalCliente" hidden aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <aside class="modal-cliente" role="dialog" aria-modal="true" aria-labelledby="tituloModalCliente">
         <div class="modal-cliente-header">
-
             <div>
-
-                <h2 id="tituloModalCliente">
-
-                    <i class="fa-solid fa-user-plus"></i>
-
-                    Novo Cliente
-
-                </h2>
-
-                <p>
-
-                    Cadastre um novo cliente no MercadoNex.
-
-                </p>
-
+                <h2 id="tituloModalCliente">Novo Cliente</h2>
+                <p>Cadastre um novo cliente no MercadoNex.</p>
             </div>
-
-            <button
-                type="button"
-                class="btn-fechar"
-                id="fecharModal">
-
+            <button type="button" class="btn-fechar" id="fecharModal" aria-label="Fechar">
                 <i class="fa-solid fa-xmark"></i>
-
             </button>
-
         </div>
 
-        <!-- Formulário -->
         <div class="modal-body">
             <form id="cliente-form" method="POST" action="{% url 'cadastrar_cliente' %}">
-
                 {% csrf_token %}
 
-                <!-- ================================= -->
-                <!-- DADOS PESSOAIS -->
-                <!-- ================================= -->
-
                 <div class="form-section">
-
-                    <h3>
-
-                        <i class="fa-solid fa-id-card"></i>
-
-                        Dados Pessoais
-
-                    </h3>
-
-                    <div class="form-grid">
-
-                        <div class="form-group full">
-
-                            <label>
-
-                                Nome Completo *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="nome"
-                                required>
-
+                    <div class="form-section-title">
+                        <span class="section-icon"><i class="fa-solid fa-user"></i></span>
+                        <div>
+                            <h3>Dados pessoais</h3>
+                            <p>Informações básicas do cliente</p>
                         </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                CPF *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="cpf"
-                                required>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Telefone *
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="telefone"
-                                required>
-
-                        </div>
-
-                        <div class="form-group full">
-
-                            <label>
-
-                                Email
-
-                            </label>
-
-                            <input
-                                type="email"
-                                name="email">
-
-                        </div>
-
-                        <div class="form-group full">
-
-                            <label>
-
-                                Endereço
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="endereco">
-
-                        </div>
-
                     </div>
 
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="clienteNome">Nome completo <b>*</b></label>
+                            <input id="clienteNome" type="text" name="nome" placeholder="Digite o nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="clienteCpf">CPF <b>*</b></label>
+                            <input id="clienteCpf" type="text" name="cpf" placeholder="000.000.000-00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="clienteTelefone">Telefone <b>*</b></label>
+                            <input id="clienteTelefone" type="text" name="telefone" placeholder="(00) 00000-0000" required>
+                        </div>
+                        <div class="form-group full">
+                            <label for="clienteEmail">E-mail</label>
+                            <input id="clienteEmail" type="email" name="email" placeholder="cliente@email.com">
+                        </div>
+                        <div class="form-group full">
+                            <label for="clienteEndereco">Endereço</label>
+                            <input id="clienteEndereco" type="text" name="endereco" placeholder="Rua, número, bairro...">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ================================= -->
-                <!-- DADOS FINANCEIROS -->
-                <!-- ================================= -->
-
                 <div class="form-section">
-
-                    <h3>
-
-                        <i class="fa-solid fa-wallet"></i>
-
-                        Dados Financeiros
-
-                    </h3>
+                    <div class="form-section-title">
+                        <span class="section-icon wallet"><i class="fa-solid fa-wallet"></i></span>
+                        <div>
+                            <h3>Controle de fiado</h3>
+                            <p>Defina as condições de crédito do cliente</p>
+                        </div>
+                    </div>
 
                     <div class="form-grid">
-
                         <div class="form-group">
-
-                            <label>
-
-                                Limite de Fiado
-
-                            </label>
-
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="limite_fiado"
-                                value="0">
-
+                            <label for="limiteFiado">Limite de fiado</label>
+                            <div class="money-field"><span>R$</span><input id="limiteFiado" type="number" step="0.01" min="0" name="limite_fiado" value="0"></div>
                         </div>
-
-                        <div class="form-group">
-
-                            <label>
-
-                                Permitir compras no fiado
-
-                            </label>
-
+                        <div class="form-group toggle-group">
+                            <label for="ativoFiado">Permitir compras no fiado</label>
                             <label class="switch">
-
-                                <input
-                                    type="checkbox"
-                                    name="ativo_fiado"
-                                    checked>
-
+                                <input id="ativoFiado" type="checkbox" name="ativo_fiado" checked>
                                 <span class="slider"></span>
-
                             </label>
-
                         </div>
-
                     </div>
-
                 </div>
-
-                <!-- Rodapé -->
 
                 <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn-cancelar"
-                        id="cancelarModal">
-
-                        Cancelar
-
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="btn-salvar">
-
-                        <i class="fa-solid fa-floppy-disk"></i>
-
-                        Salvar Cliente
-
-                    </button>
-
+                    <button type="button" class="btn-cancelar" id="cancelarModal">Cancelar</button>
+                    <button type="submit" class="btn-salvar"><i class="fa-solid fa-floppy-disk"></i> Salvar Cliente</button>
                 </div>
-
             </form>
         </div>
-    </div>
-
+    </aside>
 </div>
-
 {% endblock %}
 
 {% block scripts %}

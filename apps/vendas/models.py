@@ -13,6 +13,9 @@ class Venda(models.Model):
     total = models.DecimalField( max_digits=10, decimal_places=2, default=0)
     desconto = models.DecimalField( max_digits=10, decimal_places=2, default=0)
     valor_final = models.DecimalField( max_digits=10,decimal_places=2, default=0)
+    vencimento_fiado = models.DateField( null=True,blank=True)
+    fiado_pago = models.BooleanField( default=False)
+    data_pagamento_fiado = models.DateTimeField( null=True, blank=True)
 
     def __str__(self):
         return f"Venda #{self.id}"

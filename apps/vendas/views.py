@@ -6,6 +6,7 @@ from apps.produtos.models import Produto
 import json
 from decimal import Decimal, InvalidOperation
 from django.utils import timezone
+from datetime import timedelta
 from django.db import transaction
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
@@ -138,6 +139,8 @@ def finalizar_venda(request):
             total=subtotal.quantize(Decimal("0.01")),
             desconto=desconto_valor,
             valor_final=valor_final,
+            vencimento_fiado=(timezone.localdate() + timedelta(days=30)) if forma_pagamento == "FIADO" else None,
+            fiado_pago=(forma_pagamento != "FIADO"),
         )
 
         for produto_id, quantidade in itens_normalizados.items():
@@ -181,3 +184,40 @@ def finalizar_venda(request):
         return JsonResponse({"sucesso": False, "erro": str(erro)}, status=400)
 
 
+
+
+@login_required
+@require_POST
+@transaction.atomic
+def quitar_fiado(request, venda_id):
+    venda = get_object_or_404(
+        Venda.objects.select_for_update().select_related("cliente"),
+        pk=venda_id,
+        forma_pagamento="FIADO",
+        status="FINALIZADA",
+    )
+
+    if venda.fiado_pago:
+        return JsonResponse({"sucesso": False, "erro": "Esta dívida já foi quitada."}, status=400)
+
+    cliente = venda.cliente
+    if cliente is None:
+        return JsonResponse({"sucesso": False, "erro": "A venda não possui cliente vinculado."}, status=400)
+
+    saldo_atual = Decimal(cliente.saldo_fiado or 0)
+    novo_saldo = max(Decimal("0.00"), saldo_atual - Decimal(venda.valor_final or 0))
+
+    cliente.saldo_fiado = novo_saldo
+    cliente.save(update_fields=["saldo_fiado"])
+
+    venda.fiado_pago = True
+    venda.data_pagamento_fiado = timezone.now()
+    venda.save(update_fields=["fiado_pago", "data_pagamento_fiado"])
+
+    return JsonResponse({
+        "sucesso": True,
+        "venda_id": venda.id,
+        "cliente": cliente.nome,
+        "valor_pago": str(venda.valor_final),
+        "novo_saldo_fiado": str(novo_saldo),
+    })

@@ -1,976 +1,296 @@
 {% extends "base_dashboard.html" %}
-
 {% load static %}
 
-
-{% block titulo %}
-Dashboard - MercadoNex
-{% endblock %}
-
+{% block titulo %}Dashboard - MercadoNex{% endblock %}
 
 {% block cabecalho %}
-
 <div class="page-heading" id="pageHeading">
-
-    <h1 id="pageTitle">
-        Painel Inicial
-    </h1>
-
-    <p id="pageSubtitle">
-        Visão geral do seu mercadinho
-    </p>
-
+    <h1 id="pageTitle">Painel Inicial</h1>
+    <p id="pageSubtitle">{{ hoje|date:"l, d \d\e F \d\e Y"|capfirst }}</p>
 </div>
-
 {% endblock %}
 
-
 {% block conteudo %}
+<section class="dashboard-home dashboard-reference">
 
-<section class="dashboard-home">
+    <div class="dashboard-kpis">
+        <article class="dashboard-kpi">
+            <span>Receita hoje</span>
+            <strong>R$ {{ receita_hoje|floatformat:2 }}</strong>
+            <small>{{ vendas_hoje }} venda{{ vendas_hoje|pluralize:"s" }} finalizada{{ vendas_hoje|pluralize:"s" }}</small>
+        </article>
 
-    <!-- =====================================================
-         CABEÇALHO DO PAINEL
-    ====================================================== -->
+        <article class="dashboard-kpi">
+            <span>Vendas do mês</span>
+            <strong>R$ {{ receita_mes|floatformat:2 }}</strong>
+            <small>{{ vendas_mes }} transação{{ vendas_mes|pluralize:"ões" }} finalizada{{ vendas_mes|pluralize:"s" }}</small>
+        </article>
 
-    <div class="section-intro">
+        <article class="dashboard-kpi">
+            <span>Clientes ativos</span>
+            <strong>{{ clientes_ativos }}</strong>
+            <small>{{ novos_clientes_semana }} novo{{ novos_clientes_semana|pluralize:"s" }} esta semana</small>
+        </article>
 
-        <div>
+        <article class="dashboard-kpi dashboard-kpi-warning">
+            <span>Itens em falta</span>
+            <strong>{{ itens_em_falta }}</strong>
+            <small>Produtos com estoque baixo</small>
+        </article>
+    </div>
 
-            <span class="eyebrow">
-                RESUMO
-            </span>
+    <div class="dashboard-tabs" role="tablist" aria-label="Resumo dos módulos">
+        <button type="button" class="dashboard-tab active" data-tab="produtos" role="tab" aria-selected="true">Gestão de Produtos</button>
+        <button type="button" class="dashboard-tab" data-tab="clientes" role="tab" aria-selected="false">Gestão de Clientes</button>
+        <button type="button" class="dashboard-tab" data-tab="financeiro" role="tab" aria-selected="false">Controle Financeiro</button>
+        <button type="button" class="dashboard-tab" data-tab="relatorios" role="tab" aria-selected="false">Relatórios</button>
+    </div>
 
-            <h2>
-                Visão geral
-            </h2>
+    <div class="dashboard-tab-panel active" data-panel="produtos" role="tabpanel">
+        <div class="dashboard-two-col dashboard-products-grid">
+            <article class="dashboard-panel-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Vendas Recentes</h2>
+                        <span>Últimas operações finalizadas</span>
+                    </div>
+                    <span class="dashboard-period">Hoje</span>
+                </div>
 
-            <p>
-                Acompanhe os principais indicadores do seu mercadinho.
-            </p>
+                <div class="dashboard-table-wrap">
+                    <table class="dashboard-sales-table">
+                        <thead>
+                            <tr>
+                                <th>Pedido</th>
+                                <th>Cliente</th>
+                                <th>Itens</th>
+                                <th>Total</th>
+                                <th>Hora</th>
+                                <th>Pagamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for venda in vendas_recentes %}
+                            <tr>
+                                <td class="dashboard-order">#{{ venda.id }}</td>
+                                <td>{{ venda.cliente.nome|default:"Consumidor Final" }}</td>
+                                <td>{{ venda.total_itens }}</td>
+                                <td><strong>R$ {{ venda.valor_final|floatformat:2 }}</strong></td>
+                                <td>{{ venda.data|date:"H:i" }}</td>
+                                <td><span class="dashboard-payment {{ venda.pagamento_classe }}">{{ venda.pagamento_nome }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6" class="dashboard-empty">Nenhuma venda finalizada recentemente.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
 
+            <article class="dashboard-panel-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Mais Vendidos</h2>
+                        <span>Produtos com maior saída</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-ranking-list">
+                    {% for produto in mais_vendidos %}
+                    <div class="dashboard-ranking-item">
+                        <span class="dashboard-ranking-number">{{ forloop.counter }}</span>
+                        <div>
+                            <strong>{{ produto.produto__nome }}</strong>
+                            <small>{{ produto.produto__categoria|default:"Sem categoria" }} · {{ produto.quantidade_total }} un.</small>
+                        </div>
+                        <b>R$ {{ produto.faturamento|floatformat:2 }}</b>
+                    </div>
+                    {% empty %}
+                    <div class="dashboard-empty">Ainda não há dados de vendas suficientes.</div>
+                    {% endfor %}
+                </div>
+            </article>
         </div>
 
-
-        <a
-            href="{% url 'produtos' %}"
-            class="primary-button">
-
-            <i class="fa-solid fa-box"></i>
-
-            Gestão de Produtos
-
-        </a>
-
-    </div>
-
-
-    <!-- =====================================================
-         CARDS DE INDICADORES
-    ====================================================== -->
-
-    <div class="stats-grid">
-
-
-        <!-- =================================================
-             RECEITA HOJE
-        ================================================== -->
-
-        <article class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    Receita hoje
-                </span>
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-wallet"></i>
-
-                </div>
-
+        <article class="dashboard-stock-alert">
+            <div class="dashboard-stock-title">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <strong>Estoque Baixo</strong>
+                <span>{{ itens_em_falta }} item{{ itens_em_falta|pluralize:"s" }} precisam de reposição</span>
             </div>
-
-
-            <strong>
-                R$ 2.847,50
-            </strong>
-
-
-            <small class="positive">
-
-                +12,4%
-
-                <span>
-                    vs. ontem
-                </span>
-
-            </small>
-
-        </article>
-
-
-        <!-- =================================================
-             VENDAS DO MÊS
-        ================================================== -->
-
-        <article class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    Vendas do mês
-                </span>
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-chart-column"></i>
-
-                </div>
-
-            </div>
-
-
-            <strong>
-                R$ 68.320,00
-            </strong>
-
-
-            <small class="positive">
-
-                +8,1%
-
-                <span>
-                    vs. mês anterior
-                </span>
-
-            </small>
-
-        </article>
-
-
-        <!-- =================================================
-             CLIENTES ATIVOS
-        ================================================== -->
-
-        <article class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    Clientes ativos
-                </span>
-
-                <div class="stat-icon">
-
-                    <i class="fa-solid fa-user-group"></i>
-
-                </div>
-
-            </div>
-
-
-            <strong>
-                1.243
-            </strong>
-
-
-            <small class="positive">
-
-                +34
-
-                <span>
-                    novos esta semana
-                </span>
-
-            </small>
-
-        </article>
-
-
-        <!-- =================================================
-             ITENS EM FALTA
-        ================================================== -->
-
-        <article class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    Itens em falta
-                </span>
-
-                <div class="stat-icon warning">
-
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-
-                </div>
-
-            </div>
-
-
-            <strong>
-                17
-            </strong>
-
-
-            <small class="negative">
-
-                -3
-
-                <span>
-                    vs. ontem
-                </span>
-
-            </small>
-
-        </article>
-
-    </div>
-
-
-    <!-- =====================================================
-         ÁREA PRINCIPAL
-    ====================================================== -->
-
-    <div class="dashboard-grid">
-
-
-        <!-- =================================================
-             VENDAS RECENTES
-        ================================================== -->
-
-        <article class="panel-card sales-panel">
-
-            <div class="panel-header">
-
-                <div>
-
-                    <h3>
-                        Vendas recentes
-                    </h3>
-
-                    <p>
-                        Últimas vendas realizadas
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="#"
-                    class="text-button">
-
-                    Ver todas
-
+            <div class="dashboard-stock-list">
+                {% for produto in estoque_baixo %}
+                <a href="{% url 'produtos' %}?buscar={{ produto.nome|urlencode }}" class="dashboard-stock-item">
+                    <strong>{{ produto.nome }}</strong>
+                    <span>{{ produto.quantidade }} un.</span>
+                    <small>mín. 10</small>
                 </a>
-
+                {% empty %}
+                <span class="dashboard-no-alert">Nenhum produto com estoque baixo.</span>
+                {% endfor %}
             </div>
-
-
-            <div class="table-wrapper">
-
-                <table class="sales-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Pedido
-                            </th>
-
-                            <th>
-                                Cliente
-                            </th>
-
-                            <th>
-                                Itens
-                            </th>
-
-                            <th>
-                                Total
-                            </th>
-
-                            <th>
-                                Hora
-                            </th>
-
-                            <th>
-                                Pagamento
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-
-                        <!-- =================================
-                             VENDA 1
-                        ================================== -->
-
-                        <tr>
-
-                            <td>
-
-                                <span class="order-number">
-                                    #4821
-                                </span>
-
-                            </td>
-
-                            <td>
-                                Maria Souza
-                            </td>
-
-                            <td>
-                                7
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    R$ 134,80
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                14:32
-                            </td>
-
-                            <td>
-
-                                <span class="payment pix">
-                                    PIX
-                                </span>
-
-                            </td>
-
-                        </tr>
-
-
-                        <!-- =================================
-                             VENDA 2
-                        ================================== -->
-
-                        <tr>
-
-                            <td>
-
-                                <span class="order-number">
-                                    #4820
-                                </span>
-
-                            </td>
-
-                            <td>
-                                João Pereira
-                            </td>
-
-                            <td>
-                                3
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    R$ 47,20
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                14:18
-                            </td>
-
-                            <td>
-
-                                <span class="payment debit">
-                                    Débito
-                                </span>
-
-                            </td>
-
-                        </tr>
-
-
-                        <!-- =================================
-                             VENDA 3
-                        ================================== -->
-
-                        <tr>
-
-                            <td>
-
-                                <span class="order-number">
-                                    #4819
-                                </span>
-
-                            </td>
-
-                            <td>
-                                Ana Lima
-                            </td>
-
-                            <td>
-                                12
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    R$ 218,60
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                13:55
-                            </td>
-
-                            <td>
-
-                                <span class="payment credit">
-                                    Crédito
-                                </span>
-
-                            </td>
-
-                        </tr>
-
-
-                        <!-- =================================
-                             VENDA 4
-                        ================================== -->
-
-                        <tr>
-
-                            <td>
-
-                                <span class="order-number">
-                                    #4818
-                                </span>
-
-                            </td>
-
-                            <td>
-                                Carlos Neto
-                            </td>
-
-                            <td>
-                                5
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    R$ 89,40
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                13:41
-                            </td>
-
-                            <td>
-
-                                <span class="payment cash">
-                                    Dinheiro
-                                </span>
-
-                            </td>
-
-                        </tr>
-
-
-                        <!-- =================================
-                             VENDA 5
-                        ================================== -->
-
-                        <tr>
-
-                            <td>
-
-                                <span class="order-number">
-                                    #4817
-                                </span>
-
-                            </td>
-
-                            <td>
-                                Fernanda Costa
-                            </td>
-
-                            <td>
-                                2
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    R$ 28,90
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                13:20
-                            </td>
-
-                            <td>
-
-                                <span class="payment pix">
-                                    PIX
-                                </span>
-
-                            </td>
-
-                        </tr>
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
         </article>
-
-
-        <!-- =================================================
-             MAIS VENDIDOS
-        ================================================== -->
-
-        <article class="panel-card">
-
-            <div class="panel-header">
-
-                <div>
-
-                    <h3>
-                        Mais vendidos
-                    </h3>
-
-                    <p>
-                        Produtos com maior saída
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="ranking-list">
-
-
-                <!-- PRODUTO 1 -->
-
-                <div class="ranking-item">
-
-                    <span class="ranking-position">
-                        1
-                    </span>
-
-
-                    <div class="ranking-info">
-
-                        <strong>
-                            Arroz Tipo 1 5kg
-                        </strong>
-
-                        <small>
-                            Grãos · 61 un.
-                        </small>
-
-                    </div>
-
-
-                    <b>
-                        R$ 854,00
-                    </b>
-
-                </div>
-
-
-                <!-- PRODUTO 2 -->
-
-                <div class="ranking-item">
-
-                    <span class="ranking-position">
-                        2
-                    </span>
-
-
-                    <div class="ranking-info">
-
-                        <strong>
-                            Refrigerante 2L
-                        </strong>
-
-                        <small>
-                            Bebidas · 49 un.
-                        </small>
-
-                    </div>
-
-
-                    <b>
-                        R$ 588,00
-                    </b>
-
-                </div>
-
-
-                <!-- PRODUTO 3 -->
-
-                <div class="ranking-item">
-
-                    <span class="ranking-position">
-                        3
-                    </span>
-
-
-                    <div class="ranking-info">
-
-                        <strong>
-                            Pão de Forma
-                        </strong>
-
-                        <small>
-                            Padaria · 57 un.
-                        </small>
-
-                    </div>
-
-
-                    <b>
-                        R$ 456,00
-                    </b>
-
-                </div>
-
-
-                <!-- PRODUTO 4 -->
-
-                <div class="ranking-item">
-
-                    <span class="ranking-position">
-                        4
-                    </span>
-
-
-                    <div class="ranking-info">
-
-                        <strong>
-                            Óleo de Soja 900ml
-                        </strong>
-
-                        <small>
-                            Mercearia · 43 un.
-                        </small>
-
-                    </div>
-
-
-                    <b>
-                        R$ 387,00
-                    </b>
-
-                </div>
-
-            </div>
-
-        </article>
-
     </div>
 
+    <div class="dashboard-tab-panel" data-panel="clientes" role="tabpanel" hidden>
+        <div class="dashboard-two-col dashboard-clients-grid">
+            <article class="dashboard-panel-card dashboard-client-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Clientes Frequentes</h2>
+                        <span>Clientes com mais compras registradas</span>
+                    </div>
+                </div>
+                <div class="dashboard-client-list">
+                    {% for cliente in clientes_frequentes %}
+                    <div class="dashboard-client-row">
+                        <span class="dashboard-avatar">{{ cliente.nome|first|upper }}</span>
+                        <div>
+                            <strong>{{ cliente.nome }}</strong>
+                            <small>{{ cliente.visitas }} visita{{ cliente.visitas|pluralize:"s" }} · desde {{ cliente.data_cadastro|date:"M Y" }}</small>
+                        </div>
+                        <b>R$ {{ cliente.total_gasto|floatformat:2 }}</b>
+                    </div>
+                    {% empty %}
+                    <div class="dashboard-empty">Nenhum cliente com compras registradas.</div>
+                    {% endfor %}
+                </div>
+            </article>
 
-    <!-- =====================================================
-         ESTOQUE BAIXO
-    ====================================================== -->
-
-    <div class="stock-alert">
-
-
-        <div class="stock-alert-header">
-
-            <i class="fa-solid fa-triangle-exclamation"></i>
-
-
-            <strong>
-                Estoque baixo
-            </strong>
-
-
-            <span>
-                4 itens precisam de reposição
-            </span>
-
+            <article class="dashboard-panel-card dashboard-client-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Novos Clientes</h2>
+                        <span>Cadastros mais recentes</span>
+                    </div>
+                </div>
+                <div class="dashboard-client-list">
+                    {% for cliente in clientes_novos %}
+                    <div class="dashboard-client-row">
+                        <span class="dashboard-avatar soft">{{ cliente.nome|first|upper }}</span>
+                        <div>
+                            <strong>{{ cliente.nome }}</strong>
+                            <small>Cadastro em {{ cliente.data_cadastro|date:"d/m/Y" }}</small>
+                        </div>
+                        <span class="dashboard-first-purchase">{{ cliente.primeira_compra }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="dashboard-empty">Nenhum cliente cadastrado.</div>
+                    {% endfor %}
+                </div>
+                <div class="dashboard-client-footer">
+                    <div><strong>{{ clientes_total }}</strong><span>Total</span></div>
+                    <div><strong>{{ clientes_ativos_30d }}</strong><span>Ativos 30d</span></div>
+                    <div><strong>{{ novos_clientes_semana }}</strong><span>Novos semana</span></div>
+                </div>
+            </article>
         </div>
-
-
-        <div class="stock-items">
-
-
-            <!-- ITEM 1 -->
-
-            <a
-                href="{% url 'produtos' %}?buscar=Feijão"
-                class="stock-item">
-
-                <strong>
-                    Feijão Preto 1kg
-                </strong>
-
-                <span class="stock-current">
-                    4 un.
-                </span>
-
-                <small>
-                    mín. 20
-                </small>
-
-            </a>
-
-
-            <!-- ITEM 2 -->
-
-            <a
-                href="{% url 'produtos' %}?buscar=Óleo"
-                class="stock-item">
-
-                <strong>
-                    Óleo de Soja 900ml
-                </strong>
-
-                <span class="stock-current">
-                    9 un.
-                </span>
-
-                <small>
-                    mín. 30
-                </small>
-
-            </a>
-
-
-            <!-- ITEM 3 -->
-
-            <a
-                href="{% url 'produtos' %}?buscar=Arroz"
-                class="stock-item">
-
-                <strong>
-                    Arroz Tipo 1 5kg
-                </strong>
-
-                <span class="stock-current">
-                    18 un.
-                </span>
-
-                <small>
-                    mín. 40
-                </small>
-
-            </a>
-
-
-            <!-- ITEM 4 -->
-
-            <a
-                href="{% url 'produtos' %}?buscar=Açúcar"
-                class="stock-item">
-
-                <strong>
-                    Açúcar Cristal 1kg
-                </strong>
-
-                <span class="stock-current">
-                    11 un.
-                </span>
-
-                <small>
-                    mín. 25
-                </small>
-
-            </a>
-
-        </div>
-
     </div>
 
+    <div class="dashboard-tab-panel" data-panel="financeiro" role="tabpanel" hidden>
+        <div class="dashboard-two-col dashboard-finance-grid">
+            <article class="dashboard-panel-card dashboard-week-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Vendas da Semana</h2>
+                        <span>{{ semana_inicio|date:"d" }}–{{ semana_fim|date:"d M Y" }}</span>
+                    </div>
+                </div>
+                <div class="dashboard-week-chart">
+                    {% for dia in vendas_semana %}
+                    <div class="dashboard-week-col">
+                        <div class="dashboard-week-bar-wrap"><div class="dashboard-week-bar" style="height: {{ dia.altura }}%"></div></div>
+                        <span>{{ dia.nome }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="dashboard-finance-summary">
+                    <div><span>Total semana</span><strong>R$ {{ receita_semana|floatformat:2 }}</strong></div>
+                    <div><span>Ticket médio</span><strong>R$ {{ ticket_medio_semana|floatformat:2 }}</strong></div>
+                    <div><span>Transações</span><strong>{{ transacoes_semana }}</strong></div>
+                </div>
+            </article>
 
-    <!-- =====================================================
-         ACESSO RÁPIDO AOS MÓDULOS
-    ====================================================== -->
-
-    <div class="dashboard-quick-access">
-
-
-        <div class="panel-header quick-access-header">
-
-            <div>
-
-                <h3>
-                    Acesso rápido
-                </h3>
-
-                <p>
-                    Acesse os principais módulos do MercadoNex
-                </p>
-
-            </div>
-
+            <article class="dashboard-panel-card dashboard-payment-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Formas de Pagamento</h2>
+                        <span>Distribuição das vendas do mês</span>
+                    </div>
+                </div>
+                <div class="dashboard-payments-list">
+                    {% for pagamento in pagamentos_mes %}
+                    <div class="dashboard-payment-row">
+                        <div><span>{{ pagamento.nome }}</span><small>{{ pagamento.percentual }}%</small></div>
+                        <div class="dashboard-progress"><span style="width:{{ pagamento.percentual }}%"></span></div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="dashboard-profit">
+                    <span>Lucro estimado do mês</span>
+                    <strong>R$ {{ lucro_estimado_mes|floatformat:2 }}</strong>
+                </div>
+            </article>
         </div>
+    </div>
 
-
-        <div class="quick-access-grid">
-
-
-            <!-- PRODUTOS -->
-
-            <a
-                href="{% url 'produtos' %}"
-                class="quick-access-card">
-
-                <div class="quick-access-icon blue">
-
-                    <i class="fa-solid fa-box"></i>
-
+    <div class="dashboard-tab-panel" data-panel="relatorios" role="tabpanel" hidden>
+        <div class="dashboard-two-col dashboard-reports-grid">
+            <article class="dashboard-panel-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Alertas Inteligentes</h2>
+                        <span>Baseado nos dados recentes do sistema</span>
+                    </div>
                 </div>
-
-                <div>
-
-                    <strong>
-                        Gestão de Produtos
-                    </strong>
-
-                    <span>
-                        Cadastre e gerencie produtos
-                    </span>
-
+                <div class="dashboard-alert-list">
+                    <div class="dashboard-alert critical">
+                        <i></i><div><strong>Estoque crítico</strong><span>{{ estoque_critico_texto }}</span></div>
+                    </div>
+                    <div class="dashboard-alert success">
+                        <i></i><div><strong>Movimento de vendas</strong><span>{{ vendas_alerta_texto }}</span></div>
+                    </div>
+                    <div class="dashboard-alert warning">
+                        <i></i><div><strong>Ticket médio</strong><span>Ticket médio atual: R$ {{ ticket_medio_mes|floatformat:2 }}.</span></div>
+                    </div>
+                    <div class="dashboard-alert success">
+                        <i></i><div><strong>Clientes</strong><span>{{ clientes_ativos }} clientes ativos no cadastro.</span></div>
+                    </div>
                 </div>
+            </article>
 
-                <i
-                    class="fa-solid fa-chevron-right quick-arrow">
-                </i>
-
-            </a>
-
-
-            <!-- CLIENTES -->
-
-            <a
-                href="{% url 'clientes' %}"
-                class="quick-access-card">
-
-                <div class="quick-access-icon green">
-
-                    <i class="fa-solid fa-users"></i>
-
+            <article class="dashboard-panel-card">
+                <div class="dashboard-panel-header">
+                    <div>
+                        <h2>Exportar Relatórios</h2>
+                        <span>Arquivos prontos para consulta</span>
+                    </div>
                 </div>
-
-                <div>
-
-                    <strong>
-                        Gestão de Clientes
-                    </strong>
-
-                    <span>
-                        Gerencie seus clientes
-                    </span>
-
+                <div class="dashboard-report-list">
+                    <button type="button" class="dashboard-report-row" disabled>
+                        <span class="dashboard-report-icon"><i class="fa-regular fa-file-lines"></i></span>
+                        <span><strong>Vendas do Mês</strong><small>{{ vendas_mes }} transações registradas</small></span>
+                        <b>CSV</b>
+                    </button>
+                    <button type="button" class="dashboard-report-row" disabled>
+                        <span class="dashboard-report-icon"><i class="fa-regular fa-file-lines"></i></span>
+                        <span><strong>Controle de Estoque</strong><small>{{ produtos_total }} produtos cadastrados</small></span>
+                        <b>CSV</b>
+                    </button>
+                    <button type="button" class="dashboard-report-row" disabled>
+                        <span class="dashboard-report-icon"><i class="fa-regular fa-file-lines"></i></span>
+                        <span><strong>Fluxo de Caixa</strong><small>Resumo dos últimos 30 dias</small></span>
+                        <b>CSV</b>
+                    </button>
+                    <button type="button" class="dashboard-report-row" disabled>
+                        <span class="dashboard-report-icon"><i class="fa-regular fa-file-lines"></i></span>
+                        <span><strong>Clientes Ativos</strong><small>Cadastro e movimentações</small></span>
+                        <b>CSV</b>
+                    </button>
                 </div>
-
-                <i
-                    class="fa-solid fa-chevron-right quick-arrow">
-                </i>
-
-            </a>
-
-
-            <!-- FINANCEIRO -->
-
-            <div
-                class="quick-access-card quick-disabled">
-
-                <div class="quick-access-icon yellow">
-
-                    <i class="fa-solid fa-chart-line"></i>
-
-                </div>
-
-                <div>
-
-                    <strong>
-                        Controle Financeiro
-                    </strong>
-
-                    <span>
-                        Fluxo de caixa e resultados
-                    </span>
-
-                </div>
-
-                <span class="quick-coming">
-                    Em breve
-                </span>
-
-            </div>
-
-
-            <!-- RELATÓRIOS -->
-
-            <div
-                class="quick-access-card quick-disabled">
-
-                <div class="quick-access-icon purple">
-
-                    <i class="fa-solid fa-file-chart-column"></i>
-
-                </div>
-
-                <div>
-
-                    <strong>
-                        Relatórios Inteligentes
-                    </strong>
-
-                    <span>
-                        Indicadores e análises
-                    </span>
-
-                </div>
-
-                <span class="quick-coming">
-                    Em breve
-                </span>
-
-            </div>
-
+            </article>
         </div>
-
     </div>
 
 </section>
-
-{% endblock %}
-
-
-{% block scripts %}
-
-{{ block.super }}
-
-<script src="{% static 'js/formulario.js' %}"></script>
-
-<script src="{% static 'js/cliente.js' %}"></script>
-
-<script src="{% static 'js/vencimento.js' %}"></script>
-
 {% endblock %}

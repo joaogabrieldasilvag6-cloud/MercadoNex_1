@@ -335,4 +335,104 @@ document.addEventListener("DOMContentLoaded", () => {
         "MercadoNex — dashboard.js carregado."
     );
 
+
+    /* =====================================================
+       ABAS DO PAINEL INICIAL
+    ===================================================== */
+
+    const dashboardTabs =
+        document.querySelectorAll(
+            ".dashboard-tab"
+        );
+
+    const dashboardPanels =
+        document.querySelectorAll(
+            ".dashboard-tab-panel"
+        );
+
+    function abrirAbaDashboard(nome) {
+
+        dashboardTabs.forEach(tab => {
+
+            const ativa =
+                tab.dataset.tab === nome;
+
+            tab.classList.toggle(
+                "active",
+                ativa
+            );
+
+            tab.setAttribute(
+                "aria-selected",
+                ativa ? "true" : "false"
+            );
+
+        });
+
+        dashboardPanels.forEach(panel => {
+
+            const ativa =
+                panel.dataset.panel === nome;
+
+            panel.classList.toggle(
+                "active",
+                ativa
+            );
+
+            panel.hidden = !ativa;
+
+        });
+
+    }
+
+    dashboardTabs.forEach(tab => {
+
+        tab.addEventListener(
+            "click",
+            () => {
+
+                abrirAbaDashboard(
+                    tab.dataset.tab
+                );
+
+            }
+        );
+
+    });
+
+    dashboardTabs.forEach(tab => {
+
+        tab.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "ArrowRight" ||
+                    event.key === "ArrowLeft"
+                ) {
+
+                    event.preventDefault();
+
+                    const tabs = [...dashboardTabs];
+                    const atual = tabs.indexOf(tab);
+                    const passo = event.key === "ArrowRight" ? 1 : -1;
+                    const proximo =
+                        tabs[(atual + passo + tabs.length) % tabs.length];
+
+                    proximo.focus();
+                    abrirAbaDashboard(
+                        proximo.dataset.tab
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+    if (dashboardTabs.length) {
+        abrirAbaDashboard("produtos");
+    }
+
 });

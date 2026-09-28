@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.clientes',
     'apps.produtos',
     'apps.vendas',
+    'apps.relatorios',
     
 ]
 
@@ -124,3 +125,6 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = ['static']
 
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
