@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'apps.produtos',
     'apps.vendas',
     'apps.relatorios',
+    'apps.configuracoes',
+    'apps.usuario',
     
 ]
 
@@ -68,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.usuario.context_processors.usuario_perfil',
             ],
         },
     },

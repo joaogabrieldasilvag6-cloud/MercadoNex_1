@@ -1,0 +1,214 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block titulo %}Configurações{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/configuracoes.css' %}">
+{% endblock %}
+
+{% block cabecalho %}
+<h1 id="pageTitle">Configurações</h1>
+<p id="pageSubtitle">Personalize a aparência e o comportamento do sistema</p>
+{% endblock %}
+
+{% block conteudo %}
+<section class="configuracoes-page" data-configuracoes>
+
+    <div class="section-intro">
+        <div>
+            <span class="eyebrow">SISTEMA</span>
+            <h2>Preferências</h2>
+            <p>Escolha como você deseja visualizar e utilizar o MercadoNex.</p>
+        </div>
+
+        <button type="button" class="btn-restaurar" id="btnRestaurar">
+            <i class="fa-solid fa-rotate-left"></i>
+            Restaurar padrão
+        </button>
+    </div>
+
+    <div class="configuracoes-grid">
+
+        <article class="config-card">
+            <div class="config-card-header">
+                <div class="config-icon">
+                    <i class="fa-solid fa-palette"></i>
+                </div>
+                <div>
+                    <h3>Aparência</h3>
+                    <p>Defina o tema utilizado pela interface.</p>
+                </div>
+            </div>
+
+            <div class="config-options">
+                <label class="config-option selected" data-theme-option="claro">
+                    <input type="radio" name="tema" value="claro">
+                    <span class="option-preview light-preview">
+                        <i class="fa-solid fa-sun"></i>
+                    </span>
+                    <span class="option-content">
+                        <strong>Tema claro</strong>
+                        <small>Interface clara e tradicional</small>
+                    </span>
+                    <span class="option-check"><i class="fa-solid fa-check"></i></span>
+                </label>
+
+                <label class="config-option" data-theme-option="escuro">
+                    <input type="radio" name="tema" value="escuro">
+                    <span class="option-preview dark-preview">
+                        <i class="fa-solid fa-moon"></i>
+                    </span>
+                    <span class="option-content">
+                        <strong>Tema escuro</strong>
+                        <small>Reduz o brilho da interface</small>
+                    </span>
+                    <span class="option-check"><i class="fa-solid fa-check"></i></span>
+                </label>
+            </div>
+        </article>
+
+        <article class="config-card">
+            <div class="config-card-header">
+                <div class="config-icon blue">
+                    <i class="fa-solid fa-text-height"></i>
+                </div>
+                <div>
+                    <h3>Tamanho dos textos</h3>
+                    <p>Ajuste o tamanho das letras exibidas no sistema.</p>
+                </div>
+            </div>
+
+            <div class="font-options">
+                <button type="button" class="font-option" data-font-size="small">
+                    <span class="font-sample font-small">A</span>
+                    <span>Pequeno</span>
+                </button>
+
+                <button type="button" class="font-option active" data-font-size="medium">
+                    <span class="font-sample font-medium">A</span>
+                    <span>Médio</span>
+                </button>
+
+                <button type="button" class="font-option" data-font-size="large">
+                    <span class="font-sample font-large">A</span>
+                    <span>Grande</span>
+                </button>
+            </div>
+        </article>
+
+        <article class="config-card">
+            <div class="config-card-header">
+                <div class="config-icon purple">
+                    <i class="fa-solid fa-display"></i>
+                </div>
+                <div>
+                    <h3>Interface</h3>
+                    <p>Opções adicionais de visualização do painel.</p>
+                </div>
+            </div>
+
+            <div class="switch-list">
+
+                <div class="switch-row">
+                    <div>
+                        <strong>Interface compacta</strong>
+                        <small>Reduz o espaçamento entre os elementos.</small>
+                    </div>
+
+                    <label class="fake-switch">
+                        <input type="checkbox" id="compactMode">
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="switch-row">
+                    <div>
+                        <strong>Animações da interface</strong>
+                        <small>Controla transições e animações do sistema.</small>
+                    </div>
+
+                    <label class="fake-switch checked">
+                        <input type="checkbox" id="animationsMode" checked>
+                        <span></span>
+                    </label>
+                </div>
+
+            </div>
+        </article>
+
+        <article class="config-card">
+            <div class="config-card-header">
+                <div class="config-icon yellow">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div>
+                    <h3>Notificações</h3>
+                    <p>Controle quais avisos aparecem no painel.</p>
+                </div>
+            </div>
+
+            <div class="switch-list">
+
+                <div class="switch-row">
+                    <div>
+                        <strong>Alertas de estoque</strong>
+                        <small>Avisar quando um produto estiver abaixo do mínimo.</small>
+                    </div>
+
+                    <label class="fake-switch checked">
+                        <input type="checkbox" id="stockNotifications" checked>
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="switch-row">
+                    <div>
+                        <strong>Avisos de fiado</strong>
+                        <small>Exibir alertas relacionados a clientes devedores.</small>
+                    </div>
+
+                    <label class="fake-switch checked">
+                        <input type="checkbox" id="debtNotifications" checked>
+                        <span></span>
+                    </label>
+                </div>
+
+            </div>
+        </article>
+
+        <article class="config-card config-info-card">
+            <div class="config-info-icon">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
+
+            <div>
+                <h3>MercadoNex</h3>
+                <p>
+                    As preferências desta página são salvas para o usuário.
+                    O objetivo é permitir que cada operador personalize a
+                    experiência sem alterar os dados do mercadinho.
+                </p>
+            </div>
+        </article>
+
+    </div>
+
+    <div class="config-save-bar" id="configSaveBar">
+        <div>
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="configSaveMessage">Preferências salvas.</span>
+        </div>
+
+        <button type="button" class="btn-salvar-config" id="btnSalvarConfig">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Salvar alterações
+        </button>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/configuracoes.js' %}"></script>
+{% endblock %}

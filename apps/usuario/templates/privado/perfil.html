@@ -1,0 +1,463 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block titulo %}Meu Perfil{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+{% endblock %}
+
+{% block cabecalho %}
+<h1 id="pageTitle">Meu Perfil</h1>
+<p id="pageSubtitle">Gerencie seus dados, segurança e estabelecimento</p>
+{% endblock %}
+
+{% block conteudo %}
+<section class="perfil-page" data-perfil-page data-remover-foto-url="{% url 'remover_foto' %}">
+
+    <div class="perfil-hero">
+        <div class="perfil-identity">
+            <div class="perfil-avatar-wrap">
+                <div class="perfil-avatar" id="perfilAvatar">
+                    {% if usuario.foto %}
+                        <img src="{{ usuario.foto.url }}" alt="Foto de {{ usuario.nome_completo|default:request.user.username }}" id="perfilAvatarImage">
+                    {% else %}
+                        <span id="perfilAvatarInitial">
+                            {{ usuario.nome_completo|default:request.user.username|first|upper }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <button type="button" class="avatar-edit" id="btnAlterarFoto" aria-label="Alterar foto de perfil">
+                    <i class="fa-solid fa-camera"></i>
+                </button>
+            </div>
+
+            <div class="perfil-identity-info">
+                <span class="perfil-eyebrow">CONTA DO USUÁRIO</span>
+                <h2>{{ usuario.nome_completo|default:request.user.username }}</h2>
+                <p>@{{ request.user.username }}</p>
+
+                <div class="perfil-badges">
+                    <span class="perfil-badge role-badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        {{ usuario.get_tipo_display }}
+                    </span>
+
+                    <span class="perfil-badge status-badge {% if not request.user.is_active %}inactive{% endif %}">
+                        <i class="fa-solid fa-circle"></i>
+                        {% if request.user.is_active %}Conta ativa{% else %}Conta inativa{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="perfil-hero-actions">
+            <button type="button" class="btn-primary" data-open-modal="modalEditarPerfil">
+                <i class="fa-solid fa-pen"></i>
+                Editar perfil
+            </button>
+            <a href="{% url 'logout' %}" class="btn-secondary danger-action">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair
+            </a>
+        </div>
+    </div>
+
+    <div class="perfil-layout">
+
+        <div class="perfil-main-column">
+
+            <article class="perfil-card">
+                <div class="card-heading">
+                    <div class="card-heading-icon">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                    <div>
+                        <h3>Dados pessoais</h3>
+                        <p>Informações usadas para identificar o usuário.</p>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span>Nome de usuário</span>
+                        <strong>{{ request.user.username }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Nome completo</span>
+                        <strong>{{ usuario.nome_completo|default:'Não informado' }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>E-mail</span>
+                        <strong>{{ request.user.email|default:'Não informado' }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Telefone</span>
+                        <strong>{{ usuario.telefone|default:'Não informado' }}</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article class="perfil-card">
+                <div class="card-heading">
+                    <div class="card-heading-icon security-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3>Segurança</h3>
+                        <p>Controle o acesso e acompanhe a atividade da conta.</p>
+                    </div>
+                </div>
+
+                <div class="security-list">
+                    <div class="security-item">
+                        <div class="security-item-icon">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div class="security-item-text">
+                            <strong>Senha</strong>
+                            <span>Altere sua senha sempre que necessário.</span>
+                        </div>
+                        <button type="button" class="btn-outline" data-open-modal="modalSenha">
+                            Alterar senha
+                        </button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-item-icon">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div class="security-item-text">
+                            <strong>Último acesso</strong>
+                            <span>{{ request.user.last_login|date:'d/m/Y \à\s H:i'|default:'Ainda não registrado' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-item-icon">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </div>
+                        <div class="security-item-text">
+                            <strong>Conta criada em</strong>
+                            <span>{{ request.user.date_joined|date:'d/m/Y' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="perfil-card estabelecimento-card">
+                <div class="card-heading">
+                    <div class="card-heading-icon establishment-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div>
+                        <h3>Meu estabelecimento</h3>
+                        <p>Dados do mercadinho vinculado a este usuário.</p>
+                    </div>
+
+                    <button type="button" class="icon-button" data-open-modal="modalEstabelecimento" aria-label="Editar estabelecimento">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                </div>
+
+                {% if mercado %}
+                    <div class="estabelecimento-head">
+                        <div class="estabelecimento-logo">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div>
+                            <h4>{{ mercado.nome }}</h4>
+                            <span class="market-status {% if not mercado.ativo %}inactive{% endif %}">
+                                <i class="fa-solid fa-circle"></i>
+                                {% if mercado.ativo %}Estabelecimento ativo{% else %}Estabelecimento inativo{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span>CNPJ</span>
+                            <strong>{{ mercado.cnpj|default:'Não informado' }}</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Telefone</span>
+                            <strong>{{ mercado.telefone|default:'Não informado' }}</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>E-mail</span>
+                            <strong>{{ mercado.email|default:'Não informado' }}</strong>
+                        </div>
+
+                        <div class="info-item info-item-wide">
+                            <span>Endereço / localização</span>
+                            <strong>{{ mercado.localizacao|default:'Não informado' }}</strong>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-estabelecimento">
+                        <div class="empty-icon">
+                            <i class="fa-solid fa-store-slash"></i>
+                        </div>
+                        <div>
+                            <strong>Nenhum estabelecimento vinculado</strong>
+                            <p>Cadastre os dados do seu mercadinho para que eles fiquem associados a esta conta.</p>
+                        </div>
+                        <button type="button" class="btn-primary" data-open-modal="modalEstabelecimento">
+                            Cadastrar estabelecimento
+                        </button>
+                    </div>
+                {% endif %}
+            </article>
+
+        </div>
+
+        <aside class="perfil-side-column">
+
+            <article class="perfil-card resumo-card">
+                <div class="card-heading compact-heading">
+                    <div class="card-heading-icon blue-icon">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div>
+                        <h3>Resumo da conta</h3>
+                    </div>
+                </div>
+
+                <div class="resumo-list">
+                    <div>
+                        <span>Permissão</span>
+                        <strong>{{ usuario.get_tipo_display }}</strong>
+                    </div>
+                    <div>
+                        <span>Status</span>
+                        <strong>{% if request.user.is_active %}Ativa{% else %}Inativa{% endif %}</strong>
+                    </div>
+                    <div>
+                        <span>Estabelecimento</span>
+                        <strong>{% if mercado %}{{ mercado.nome }}{% else %}Não vinculado{% endif %}</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article class="perfil-card preferencias-card">
+                <div class="card-heading compact-heading">
+                    <div class="card-heading-icon purple-icon">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3>Preferências</h3>
+                    </div>
+                </div>
+
+                <p>Personalize tema, tamanho de texto, notificações e comportamento do sistema.</p>
+
+                <a href="{% url 'configuracoes' %}" class="full-width-button">
+                    <i class="fa-solid fa-gear"></i>
+                    Abrir configurações
+                </a>
+            </article>
+
+            <article class="perfil-card foto-card">
+                <div class="card-heading compact-heading">
+                    <div class="card-heading-icon photo-icon">
+                        <i class="fa-solid fa-image"></i>
+                    </div>
+                    <div>
+                        <h3>Foto de perfil</h3>
+                    </div>
+                </div>
+
+                <p>Use uma imagem para facilitar a identificação do usuário no painel.</p>
+
+                <div class="foto-actions">
+                    <button type="button" class="btn-outline full-button" id="btnTrocarFoto">
+                        <i class="fa-solid fa-camera"></i>
+                        Alterar foto
+                    </button>
+                    {% if usuario.foto %}
+                    <button type="button" class="btn-text-danger" id="btnRemoverFoto">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Remover foto
+                    </button>
+                    {% endif %}
+                </div>
+            </article>
+
+            <input type="file" id="inputFoto" accept="image/*" hidden>
+
+        </aside>
+    </div>
+
+    <!-- Modal: editar perfil -->
+    <div class="perfil-modal" id="modalEditarPerfil" aria-hidden="true">
+        <div class="perfil-modal-backdrop" data-close-modal="modalEditarPerfil"></div>
+        <div class="perfil-modal-content" role="dialog" aria-modal="true" aria-labelledby="tituloEditarPerfil">
+            <div class="modal-header">
+                <div>
+                    <span class="perfil-eyebrow">MINHA CONTA</span>
+                    <h3 id="tituloEditarPerfil">Editar perfil</h3>
+                    <p>Atualize seus dados pessoais.</p>
+                </div>
+                <button type="button" class="modal-close" data-close-modal="modalEditarPerfil" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form action="{% url 'editar_perfil' %}" class="perfil-form" id="formEditarPerfil" method="POST">
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label for="perfilUsername">Nome de usuário</label>
+                    <input type="text" id="perfilUsername" value="{{ request.user.username }}" readonly>
+                    <small>O nome de usuário é usado para entrar no sistema e não pode ser alterado aqui.</small>
+                </div>
+
+                <div class="form-field">
+                    <label for="perfilNomeCompleto">Nome completo</label>
+                    <input type="text" id="perfilNomeCompleto" name="nome_completo" value="{{ usuario.nome_completo }}" maxlength="150" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="perfilEmail">E-mail</label>
+                    <input type="email" id="perfilEmail" name="email" value="{{ request.user.email }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="perfilTelefone">Telefone</label>
+                    <input type="tel" id="perfilTelefone" name="telefone" value="{{ usuario.telefone }}" maxlength="15" placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" data-close-modal="modalEditarPerfil">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: senha -->
+    <div class="perfil-modal" id="modalSenha" aria-hidden="true">
+        <div class="perfil-modal-backdrop" data-close-modal="modalSenha"></div>
+        <div class="perfil-modal-content" role="dialog" aria-modal="true" aria-labelledby="tituloSenha">
+            <div class="modal-header">
+                <div>
+                    <span class="perfil-eyebrow">SEGURANÇA</span>
+                    <h3 id="tituloSenha">Alterar senha</h3>
+                    <p>Crie uma senha forte para proteger sua conta.</p>
+                </div>
+                <button type="button" class="modal-close" data-close-modal="modalSenha" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form action="{% url 'alterar_senha' %}" class="perfil-form" id="formSenha" method="POST">
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label for="senhaAtual">Senha atual</label>
+                    <div class="password-field">
+                        <input type="password" id="senhaAtual" name="senha_atual" autocomplete="current-password" required>
+                        <button type="button" class="password-toggle" data-target="senhaAtual" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="novaSenha">Nova senha</label>
+                    <div class="password-field">
+                        <input type="password" id="novaSenha" name="nova_senha" autocomplete="new-password" minlength="8" required>
+                        <button type="button" class="password-toggle" data-target="novaSenha" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button>
+                    </div>
+                    <small>Use pelo menos 8 caracteres e evite informações fáceis de adivinhar.</small>
+                </div>
+
+                <div class="form-field">
+                    <label for="confirmarSenha">Confirmar nova senha</label>
+                    <div class="password-field">
+                        <input type="password" id="confirmarSenha" name="confirmar_senha" autocomplete="new-password" required>
+                        <button type="button" class="password-toggle" data-target="confirmarSenha" aria-label="Mostrar senha"><i class="fa-regular fa-eye"></i></button>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" data-close-modal="modalSenha">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-lock"></i> Atualizar senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: estabelecimento -->
+    <div class="perfil-modal" id="modalEstabelecimento" aria-hidden="true">
+        <div class="perfil-modal-backdrop" data-close-modal="modalEstabelecimento"></div>
+        <div class="perfil-modal-content" role="dialog" aria-modal="true" aria-labelledby="tituloEstabelecimento">
+            <div class="modal-header">
+                <div>
+                    <span class="perfil-eyebrow">ESTABELECIMENTO</span>
+                    <h3 id="tituloEstabelecimento">Dados do mercadinho</h3>
+                    <p>Essas informações ficam vinculadas ao usuário.</p>
+                </div>
+                <button type="button" class="modal-close" data-close-modal="modalEstabelecimento" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form action="{% url 'salvar_estabelecimento' %}" class="perfil-form" id="formEstabelecimento" method="POST">
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label for="mercadoNome">Nome do mercadinho</label>
+                    <input type="text" id="mercadoNome" name="nome" value="{% if mercado %}{{ mercado.nome }}{% endif %}" maxlength="100" required>
+                </div>
+
+                <div class="form-field-row">
+                    <div class="form-field">
+                        <label for="mercadoTelefone">Telefone</label>
+                        <input type="tel" id="mercadoTelefone" name="telefone" value="{% if mercado %}{{ mercado.telefone }}{% endif %}" maxlength="15">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="mercadoCnpj">CNPJ</label>
+                        <input type="text" id="mercadoCnpj" name="cnpj" value="{% if mercado %}{{ mercado.cnpj }}{% endif %}" maxlength="18" placeholder="00.000.000/0000-00">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label for="mercadoEmail">E-mail</label>
+                    <input type="email" id="mercadoEmail" name="email" value="{% if mercado %}{{ mercado.email }}{% endif %}">
+                </div>
+
+                <div class="form-field">
+                    <label for="mercadoLocalizacao">Endereço / localização</label>
+                    <input type="text" id="mercadoLocalizacao" name="localizacao" value="{% if mercado %}{{ mercado.localizacao }}{% endif %}" maxlength="200" placeholder="Rua, número, bairro, cidade...">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" data-close-modal="modalEstabelecimento">Cancelar</button>
+                    <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar estabelecimento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <form action="{% url 'alterar_foto' %}" method="POST" enctype="multipart/form-data" id="formFoto" hidden>
+        {% csrf_token %}
+        <input type="file" name="foto" id="formFotoInput" accept="image/*">
+    </form>
+
+    <div class="perfil-toast" id="perfilToast" role="status" aria-live="polite">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="perfilToastText">Alterações salvas.</span>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/perfil.js' %}"></script>
+{% endblock %}
