@@ -28,6 +28,10 @@
     {% endblock %}
 
     <link
+        rel="stylesheet"
+        href="{% static 'css/notificacoes.css' %}">
+
+    <link
         rel="icon"
         type="image/png"
         href="{% static 'img/favicon_mercadonex.png' %}">
@@ -187,10 +191,10 @@
                 <!-- FINANCEIRO -->
 
                 <a
-                    href="#"
-                    class="nav-item disabled-nav"
+                    href="{% url 'financeiro:financeiro' %}"
+                    class="nav-item"
                     data-page="financeiro"
-                    title="Módulo em desenvolvimento">
+                    title="financeiro">
 
                     <span class="nav-icon">
 
@@ -201,11 +205,6 @@
                     <span class="nav-label">
                         Controle Financeiro
                     </span>
-
-                    <span class="nav-coming">
-                        Em breve
-                    </span>
-
                 </a>
 
 
@@ -261,7 +260,7 @@
                 <!-- ESTOQUE -->
 
                 <a
-                    href="#"
+                    href="{% url 'estoque' %}"
                     class="nav-item disabled-nav"
                     data-page="estoque">
 
@@ -274,11 +273,7 @@
                     <span class="nav-label">
                         Estoque
                     </span>
-
-                    <span class="nav-coming">
-                        Em breve
-                    </span>
-
+                    
                 </a>
 
 
@@ -439,16 +434,43 @@
 
             <div class="topbar-actions">
 
-                <button
-                    class="notification-button"
-                    type="button"
-                    aria-label="Notificações">
+                <div class="notification-wrapper" id="notificationWrapper">
 
-                    <i class="fa-regular fa-bell"></i>
+                    <button
+                        class="notification-button"
+                        id="notificationButton"
+                        type="button"
+                        aria-label="Notificações"
+                        aria-expanded="false"
+                        aria-controls="notificationPanel">
 
-                    <span class="notification-dot"></span>
+                        <i class="fa-regular fa-bell"></i>
 
-                </button>
+                        <span class="notification-dot" id="notificationDot"></span>
+
+                    </button>
+
+                    <section
+                        class="notification-panel"
+                        id="notificationPanel"
+                        aria-label="Central de notificações"
+                        hidden>
+
+                        <div class="notification-panel-header">
+                            <div>
+                                <strong>Notificações</strong>
+                                <span id="notificationCountLabel">0 não lidas</span>
+                            </div>
+                            <button type="button" id="markAllNotifications">Marcar todas como lidas</button>
+                        </div>
+
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-loading">Carregando notificações...</div>
+                        </div>
+
+                    </section>
+
+                </div>
 
             </div>
 
@@ -475,6 +497,9 @@
 </script>
 <script
     src="{% static 'js/dashboard.js' %}">
+</script>
+<script
+    src="{% static 'js/notificacoes.js' %}">
 </script>
 
 

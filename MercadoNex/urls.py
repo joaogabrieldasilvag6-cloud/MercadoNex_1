@@ -28,6 +28,9 @@ urlpatterns = [
     path('relatorios/', include('apps.relatorios.urls')),
     path("configuracoes/", include("apps.configuracoes.urls")),
     path('perfil/', include('apps.usuario.urls')),
+    path("financeiro/", include("apps.financeiro.urls")),
+    path('estoque/', include('apps.estoque.urls')),
+    path('notificacoes/', include('apps.notificacoes.urls')),
 ]
 
 if settings.DEBUG:

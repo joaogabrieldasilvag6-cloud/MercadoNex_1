@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'apps.relatorios',
     'apps.configuracoes',
     'apps.usuario',
+    'apps.financeiro',
+    'apps.estoque',
+    'apps.notificacoes',
     
 ]
 

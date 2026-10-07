@@ -1,0 +1,288 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block titulo %}Controle Financeiro{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/financeiro.css' %}">
+{% endblock %}
+
+{% block cabecalho %}
+<div class="finance-page-heading">
+
+    <div>
+        <span class="finance-eyebrow">CONTROLE FINANCEIRO</span>
+        <h1>Visão financeira</h1>
+
+        <p> Acompanhe entradas, saídas e o resultado do seu mercadinho.</p>
+    </div>
+
+    <div class="finance-heading-actions">
+        <a href="#" class="finance-btn finance-btn-secondary">
+            ↓ &nbsp; Exportar
+        </a>
+
+        <button class="finance-btn finance-btn-primary">
+            ＋ &nbsp; Nova movimentação
+        </button>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block conteudo %}
+<section class="financeiro-page">
+
+    {% if messages %}
+    <div class="finance-messages" aria-live="polite">
+        {% for message in messages %}
+        <div class="finance-message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="finance-kpis">
+        <article class="finance-kpi">
+            <div class="finance-kpi-icon green"><i class="fa-solid fa-wallet"></i></div>
+            <div>
+                <span>Saldo disponível</span>
+                <strong>R$ {{ saldo|floatformat:2 }}</strong>
+                <small>saldo acumulado registrado</small>
+            </div>
+        </article>
+
+        <article class="finance-kpi">
+            <div class="finance-kpi-icon blue"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div>
+                <span>Entradas no período</span>
+                <strong>R$ {{ entradas|floatformat:2 }}</strong>
+                <small>receitas registradas</small>
+            </div>
+        </article>
+
+        <article class="finance-kpi">
+            <div class="finance-kpi-icon orange"><i class="fa-solid fa-arrow-trend-down"></i></div>
+            <div>
+                <span>Saídas no período</span>
+                <strong>R$ {{ saidas|floatformat:2 }}</strong>
+                <small>despesas registradas</small>
+            </div>
+        </article>
+
+        <article class="finance-kpi">
+            <div class="finance-kpi-icon purple"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+                <span>Resultado</span>
+                <strong class="{% if resultado < 0 %}negative{% endif %}">R$ {{ resultado|floatformat:2 }}</strong>
+                <small>margem de {{ margem|floatformat:1 }}%</small>
+            </div>
+        </article>
+    </div>
+
+    <div class="finance-toolbar">
+        <div>
+            <span class="finance-section-label">PERÍODO</span>
+            <strong>{{ inicio_formatado|default:inicio }} a {{ fim_formatado|default:fim }}</strong>
+        </div>
+        <form method="get" class="finance-period-form">
+            <label for="inicio">De</label>
+            <input id="inicio" type="date" name="inicio" value="{{ inicio }}">
+            <label for="fim">Até</label>
+            <input id="fim" type="date" name="fim" value="{{ fim }}">
+            <button type="submit">Aplicar</button>
+        </form>
+    </div>
+
+    <div class="finance-grid">
+        <article class="finance-panel finance-chart-panel">
+            <div class="finance-panel-header">
+                <div>
+                    <span class="finance-section-label">MOVIMENTO</span>
+                    <h2>Fluxo financeiro</h2>
+                    <p>Comparação entre entradas e saídas no período selecionado.</p>
+                </div>
+                <div class="finance-legend">
+                    <span><i class="legend-dot income"></i> Entradas</span>
+                    <span><i class="legend-dot expense"></i> Saídas</span>
+                </div>
+            </div>
+
+            <div class="finance-chart" id="financeChart" data-api-url="{% url 'financeiro:api_resumo' %}?inicio={{ inicio }}&fim={{ fim }}">
+                <div class="chart-gridline one"></div>
+                <div class="chart-gridline two"></div>
+                <div class="chart-gridline three"></div>
+                <div class="chart-empty" id="chartEmpty">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Resumo do período</span>
+                    <small>R$ {{ entradas|floatformat:2 }} em entradas · R$ {{ saidas|floatformat:2 }} em saídas</small>
+                </div>
+                <div class="finance-bars" aria-hidden="true">
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if entradas > 0 %}72{% else %}4{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}46{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if resultado >= 0 %}88{% else %}38{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}58{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if entradas > 0 %}64{% else %}4{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}34{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if entradas > 0 %}78{% else %}4{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}52{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if resultado >= 0 %}92{% else %}30{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}42{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if entradas > 0 %}70{% else %}4{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}60{% else %}4{% endif %}%;"></span>
+                    </div>
+                    <div class="finance-bar-group">
+                        <span class="finance-bar income" style="height:{% if entradas > 0 %}84{% else %}4{% endif %}%;"></span>
+                        <span class="finance-bar expense" style="height:{% if saidas > 0 %}48{% else %}4{% endif %}%;"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="finance-chart-caption">
+                <span>Dados reais do período selecionado</span>
+                <strong>Resultado: R$ {{ resultado|floatformat:2 }}</strong>
+            </div>
+        </article>
+
+        <article class="finance-panel finance-summary-panel">
+            <div class="finance-panel-header">
+                <div>
+                    <span class="finance-section-label">CONTAS</span>
+                    <h2>Situação financeira</h2>
+                    <p>Acompanhe o status das movimentações.</p>
+                </div>
+            </div>
+
+            <div class="finance-status-list">
+                <div class="finance-status-row">
+                    <span class="status-icon paid"><i class="fa-solid fa-check"></i></span>
+                    <div><strong>Pagas</strong><small>Movimentações quitadas</small></div>
+                    <b>R$ {{ contas_pagas|floatformat:2 }}</b>
+                </div>
+                <div class="finance-status-row">
+                    <span class="status-icon pending"><i class="fa-solid fa-clock"></i></span>
+                    <div><strong>A vencer</strong><small>Compromissos pendentes</small></div>
+                    <b>R$ {{ contas_a_vencer|floatformat:2 }}</b>
+                </div>
+                <div class="finance-status-row">
+                    <span class="status-icon overdue"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    <div><strong>Atrasadas</strong><small>Precisam de atenção</small></div>
+                    <b>R$ {{ contas_atrasadas|floatformat:2 }}</b>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <article class="finance-panel finance-movements-panel">
+        <div class="finance-panel-header">
+            <div>
+                <span class="finance-section-label">MOVIMENTAÇÕES</span>
+                <h2>Últimos lançamentos</h2>
+                <p>Entradas e saídas registradas no período.</p>
+            </div>
+            <button type="button" class="finance-link-button" data-open-modal>Nova movimentação</button>
+        </div>
+
+        <div class="finance-table-wrap">
+            <table class="finance-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Forma</th>
+                        <th>Status</th>
+                        <th class="align-right">Valor</th>
+                        <th aria-label="Ações"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movimento in movimentos %}
+                    <tr>
+                        <td>{{ movimento.data|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="finance-description">
+                                <span class="finance-movement-icon {% if movimento.tipo == 'ENTRADA' %}income{% else %}expense{% endif %}">
+                                    {% if movimento.tipo == 'ENTRADA' %}<i class="fa-solid fa-arrow-down"></i>{% else %}<i class="fa-solid fa-arrow-up"></i>{% endif %}
+                                </span>
+                                <div><strong>{{ movimento.descricao }}</strong>{% if movimento.referencia %}<small>{{ movimento.referencia }}</small>{% endif %}</div>
+                            </div>
+                        </td>
+                        <td>{{ movimento.categoria|default:"—" }}</td>
+                        <td>{{ movimento.forma_pagamento|default:"—" }}</td>
+                        <td><span class="finance-status {{ movimento.status|lower }}">{{ movimento.get_status_display }}</span></td>
+                        <td class="align-right finance-value {% if movimento.tipo == 'ENTRADA' %}income-text{% else %}expense-text{% endif %}">{% if movimento.tipo == 'ENTRADA' %}+{% else %}-{% endif %} R$ {{ movimento.valor|floatformat:2 }}</td>
+                        <td class="align-right">
+                            <form method="post" action="{% url 'financeiro:excluir_movimentacao' movimento.pk %}" class="delete-finance-form">
+                                {% csrf_token %}
+                                <button type="submit" title="Excluir" aria-label="Excluir movimentação"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="finance-empty">Nenhuma movimentação registrada no período.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+
+<div class="finance-modal-backdrop" data-modal aria-hidden="true">
+    <div class="finance-modal" role="dialog" aria-modal="true" aria-labelledby="financeModalTitle">
+        <div class="finance-modal-header">
+            <div>
+                <span class="finance-section-label">FINANCEIRO</span>
+                <h2 id="financeModalTitle">Nova movimentação</h2>
+                <p>Registre uma entrada ou saída no caixa.</p>
+            </div>
+            <button type="button" class="finance-modal-close" data-close-modal aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form method="post" action="{% url 'financeiro:nova_movimentacao' %}" class="finance-form">
+            {% csrf_token %}
+            <div class="finance-type-toggle">
+                <label><input type="radio" name="tipo" value="ENTRADA" checked><span><i class="fa-solid fa-arrow-down"></i> Entrada</span></label>
+                <label><input type="radio" name="tipo" value="SAIDA"><span><i class="fa-solid fa-arrow-up"></i> Saída</span></label>
+            </div>
+
+            <div class="finance-form-grid">
+                <label>Descrição *<input name="descricao" required placeholder="Ex.: Venda no caixa"></label>
+                <label>Valor *<input name="valor" inputmode="decimal" required placeholder="0,00"></label>
+                <label>Categoria<input name="categoria" placeholder="Ex.: Vendas, estoque, energia"></label>
+                <label>Data *<input type="date" name="data" value="{{ fim }}" required></label>
+                <label>Forma de pagamento
+                    <select name="forma_pagamento">
+                        <option value="">Selecione</option>
+                        <option>Pix</option><option>Dinheiro</option><option>Débito</option><option>Crédito</option><option>Boleto</option><option>Transferência</option>
+                    </select>
+                </label>
+                <label>Status
+                    <select name="status"><option value="PAGA">Paga</option><option value="A_VENCER">A vencer</option><option value="ATRASADA">Atrasada</option></select>
+                </label>
+                <label>Vencimento<input type="date" name="data_vencimento"></label>
+                <label>Referência<input name="referencia" placeholder="NF, venda, fornecedor..."></label>
+                <label class="full">Observação<textarea name="observacao" rows="3" placeholder="Informações adicionais"></textarea></label>
+            </div>
+
+            <div class="finance-modal-actions">
+                <button type="button" class="finance-btn finance-btn-secondary" data-close-modal>Cancelar</button>
+                <button type="submit" class="finance-btn finance-btn-primary">Salvar movimentação</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/financeiro.js' %}"></script>
+{% endblock %}

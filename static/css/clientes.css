@@ -51,3 +51,4 @@
 @media(max-width:520px){.clientes-cards{grid-template-columns:1fr}.clientes-header h1{font-size:22px}.modal-cliente-header,.modal-body{padding-left:17px;padding-right:17px}.modal-footer{position:sticky;bottom:0;background:#fff;padding:12px 0 3px}.btn-cancelar,.btn-salvar{flex:1}}
 
 .acao-btn.quitar-fiado{color:#7c3aed;background:#f3e8ff}.acao-btn.quitar-fiado:hover{background:#e9d5ff}
+.acoes .acao-btn.bloquear{color:var(--mn-yellow);background:#FEF3C7;border-color:#FDE68A}.acoes .acao-btn.bloquear:hover{color:#B45309;background:#FEF3C7;border-color:#FCD34D}.acoes .acao-btn.desbloquear{color:var(--mn-green-dark);background:var(--mn-green-light);border-color:#BBF7D0}.acoes .acao-btn.desbloquear:hover{color:var(--mn-green);background:#DCFCE7;border-color:#86EFAC}

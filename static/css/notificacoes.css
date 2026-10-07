@@ -1,0 +1,16 @@
+.notification-wrapper{position:relative}
+.notification-button{position:relative;width:38px;height:38px;display:grid;place-items:center;cursor:pointer;color:#55524d;background:transparent;border-radius:50%;transition:background var(--transition),color var(--transition)}
+.notification-button:hover{color:var(--mn-blue);background:var(--mn-blue-soft)}
+.notification-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border:1.5px solid var(--bg);border-radius:50%;background:var(--mn-blue);display:none}
+.notification-dot.show{display:block}
+.notification-panel{position:absolute;top:48px;right:0;width:360px;max-width:calc(100vw - 28px);background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px rgba(15,23,42,.14);overflow:hidden;z-index:80}
+.notification-panel[hidden]{display:none}
+.notification-panel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px;border-bottom:1px solid var(--border-light)}
+.notification-panel-header strong{display:block;color:#1b1a18;font-size:12px;font-weight:800}.notification-panel-header span{display:block;margin-top:3px;color:var(--text-muted);font-size:9px}
+.notification-panel-header button{background:transparent;color:var(--mn-blue);font-size:8px;font-weight:800;cursor:pointer}.notification-panel-header button:hover{text-decoration:underline}
+.notification-list{max-height:390px;overflow:auto}
+.notification-item{display:flex;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border-light);background:#fff;cursor:pointer;transition:background .15s ease}.notification-item:hover{background:#fbfdff}.notification-item:last-child{border-bottom:0}.notification-item.unread{background:#f8fbff}.notification-item.unread:hover{background:#f2f7ff}
+.notification-item-icon{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:8px;font-size:10px}.notification-item-icon.estoque{color:#b45309;background:#fff7ed}.notification-item-icon.validade{color:#c2410c;background:#fff7ed}.notification-item-icon.fiado{color:#7c3aed;background:#f5f3ff}.notification-item-icon.financeiro{color:#2563eb;background:#eff6ff}
+.notification-item-content{min-width:0;flex:1}.notification-item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.notification-item-title{color:#334155;font-size:9px;font-weight:800}.notification-item-time{color:#94a3b8;font-size:7px;white-space:nowrap}.notification-item-message{margin-top:3px;color:#64748b;font-size:8px;line-height:1.4}.notification-unread-dot{width:6px;height:6px;margin-top:3px;border-radius:50%;background:var(--mn-blue);flex:0 0 6px}
+.notification-loading,.notification-empty{padding:30px 16px;text-align:center;color:#94a3b8;font-size:9px}.notification-empty strong{display:block;margin-top:7px;color:#475569;font-size:10px}.notification-empty i{font-size:20px;color:#cbd5e1}
+@media(max-width:600px){.notification-panel{position:fixed;top:64px;right:14px;width:min(360px,calc(100vw - 28px))}}

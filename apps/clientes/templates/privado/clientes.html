@@ -128,6 +128,15 @@ Gestão de Clientes - MercadoNex
                                     <i class="fa-solid fa-wallet"></i>
                                 </button>
                                 {% endif %}
+                                {% if cliente.ativo_fiado %}
+                                <button type="button" class="acao-btn bloquear" title="Bloquear compras no fiado" onclick="alternarBloqueioCliente({{ cliente.id }}, true)">
+                                    <i class="fa-solid fa-ban"></i>
+                                </button>
+                                {% else %}
+                                <button type="button" class="acao-btn desbloquear" title="Desbloquear compras no fiado" onclick="alternarBloqueioCliente({{ cliente.id }}, false)">
+                                    <i class="fa-solid fa-lock-open"></i>
+                                </button>
+                                {% endif %}
                                 <button type="button" class="acao-btn excluir" title="Excluir cliente" onclick="removerCliente({{ cliente.id }})">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>

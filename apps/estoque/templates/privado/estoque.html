@@ -1,0 +1,147 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block titulo %}Estoque | MercadoNex{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/estoque.css' %}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="estoque-page" data-total="{{ total_produtos }}">
+    <div class="estoque-head">
+        <div>
+            <span class="estoque-eyebrow">Controle de inventário</span>
+            <h1>Estoque</h1>
+            <p>Acompanhe seus produtos e mantenha as prateleiras abastecidas.</p>
+        </div>
+        <div class="estoque-head-actions">
+            <a class="estoque-btn estoque-btn-secondary" href="/vendas/"><i class="fa-solid fa-arrow-up-right-from-square"></i>Registrar saída</a>
+            <button class="estoque-btn estoque-btn-secondary" type="button" id="btnRegistrarEntrada"><i class="fa-solid fa-arrow-down"></i>Registrar entrada</button>
+            <a class="estoque-btn estoque-btn-primary" href="/produtos/"><i class="fa-solid fa-plus"></i>Cadastrar produto</a>
+        </div>
+    </div>
+
+    <div class="estoque-kpis">
+        <article class="estoque-kpi">
+            <div class="estoque-kpi-icon green"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div><span>Produtos cadastrados</span><strong>{{ total_produtos|default:0 }}</strong><small>produtos ativos no catálogo</small></div>
+            <i class="fa-solid fa-arrow-trend-up estoque-kpi-mini"></i>
+        </article>
+        <article class="estoque-kpi">
+            <div class="estoque-kpi-icon blue"><i class="fa-solid fa-coins"></i></div>
+            <div><span>Valor em estoque</span><strong>R$ {{ valor_estoque|floatformat:2 }}</strong><small><b>{{ variacao_estoque|default:"+4,2%" }}</b> em relação ao mês anterior</small></div>
+            <i class="fa-solid fa-wallet estoque-kpi-mini"></i>
+        </article>
+        <article class="estoque-kpi">
+            <div class="estoque-kpi-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div><span>Precisam de reposição</span><strong>{{ reposicao_total|default:0 }} produtos</strong><small>{{ estoque_zerado|default:0 }} com estoque baixo · {{ estoque_falta|default:0 }} em falta</small></div>
+            <i class="fa-solid fa-box-open estoque-kpi-mini danger"></i>
+        </article>
+        <article class="estoque-kpi">
+            <div class="estoque-kpi-icon yellow"><i class="fa-regular fa-calendar"></i></div>
+            <div><span>Próximos do vencimento</span><strong>{{ vencendo_7_dias|default:0 }} lotes</strong><small>vencem nos próximos 7 dias</small></div>
+            <i class="fa-solid fa-calendar-days estoque-kpi-mini warning"></i>
+        </article>
+    </div>
+
+    {% if reposicao_total %}
+    <div class="estoque-alert">
+        <div class="estoque-alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div><strong>{{ estoque_falta|default:0 }} produtos estão em falta.</strong> Priorize a reposição de hoje.<small>Confira os itens críticos e evite perder vendas por ruptura de estoque.</small></div>
+        <button type="button" data-scroll-target="reposicao"><span>Ver lista de reposição</span><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+    {% endif %}
+
+    <section class="estoque-panel inventory-panel">
+        <div class="estoque-panel-head">
+            <div>
+                <div class="estoque-title-line"><h2>Produtos em estoque</h2><span class="estoque-count">{{ total_produtos }} produtos</span></div>
+            </div>
+            <div class="estoque-head-tools"><span class="update-time">Atualizado às {{ atualizado_em }}</span><button class="icon-text-btn" id="btnExportar"><i class="fa-solid fa-download"></i>Exportar</button></div>
+        </div>
+
+        <div class="estoque-filters">
+            <div class="estoque-search"><i class="fa-solid fa-magnifying-glass"></i><input id="estoqueSearch" type="search" placeholder="Buscar por nome, código ou barras..."></div>
+            <select id="estoqueCategoria"><option value="">Todas as categorias</option>{% for categoria in categorias %}<option value="{{ categoria|lower }}">{{ categoria }}</option>{% endfor %}</select>
+            <select id="estoqueStatus"><option value="">Todos os status</option><option value="regular">Regular</option><option value="baixo">Estoque baixo</option><option value="falta">Em falta</option><option value="vencendo">Vencendo</option></select>
+            <select id="estoqueValidade"><option value="">Validade: todas</option><option value="7">Próximos 7 dias</option><option value="30">Próximos 30 dias</option><option value="sem">Sem validade</option></select>
+            <button class="icon-text-btn" id="btnMaisFiltros"><i class="fa-solid fa-sliders"></i>Mais filtros</button>
+        </div>
+
+        <div class="estoque-table-wrap">
+            <table class="estoque-table">
+                <thead><tr><th class="check-col"><input type="checkbox" id="checkAll"></th><th>Produto</th><th>Categoria</th><th>Qtd. atual</th><th>Est. mín.</th><th>Unid.</th><th>Custo unit.</th><th>Validade</th><th>Status</th><th class="actions-col"></th></tr></thead>
+                <tbody id="estoqueTableBody">
+                {% for item in estoques %}
+                    <tr class="estoque-row" data-name="{{ item.nome|lower }}" data-code="{{ item.codigo|default:''|lower }}" data-category="{{ item.categoria|default:'Sem categoria'|lower }}" data-status="{{ item.status }}" data-stock="{{ item.quantidade }}" data-min="{{ item.minimo }}" data-expiry="{{ item.validade_iso|default:'' }}">
+                        <td><input class="row-check" type="checkbox"></td>
+                        <td><div class="product-cell"><div class="product-thumb">{% if item.imagem %}<img src="{{ item.imagem }}" alt="{{ item.nome }}">{% else %}<i class="fa-solid fa-box"></i>{% endif %}</div><div><strong>{{ item.nome }}</strong><small>{{ item.codigo|default:"Sem código" }}</small></div></div></td>
+                        <td>{{ item.categoria|default:"Sem categoria" }}</td>
+                        <td><div class="qty-cell"><strong>{{ item.quantidade|floatformat:1 }}</strong><span class="qty-bar"><i style="width:{{ item.percentual|default:0 }}%"></i></span></div></td>
+                        <td>{{ item.minimo|floatformat:0 }}</td>
+                        <td>{{ item.unidade|default:"UN" }}</td>
+                        <td>R$ {{ item.custo|floatformat:2 }}</td>
+                        <td>{% if item.validade %}<span class="validity-date {% if item.dias_validade is not None and item.dias_validade <= 7 %}critical{% endif %}">{{ item.validade }}{% if item.dias_validade is not None and item.dias_validade >= 0 and item.dias_validade <= 7 %}<small>Em {{ item.dias_validade }} dias</small>{% endif %}</span>{% else %}—{% endif %}</td>
+                        <td><span class="status-pill {{ item.status }}">{{ item.status_label }}</span></td>
+                        <td><div class="row-menu"><button type="button" class="row-menu-btn" aria-label="Ações"><i class="fa-solid fa-ellipsis"></i></button><div class="row-menu-dropdown"><button type="button" data-action="entrada" data-id="{{ item.id }}" data-nome="{{ item.nome }}"><i class="fa-solid fa-arrow-down"></i>Registrar entrada</button><button type="button" data-action="ajuste" data-id="{{ item.id }}" data-nome="{{ item.nome }}" data-quantidade="{{ item.quantidade }}"><i class="fa-solid fa-sliders"></i>Ajustar estoque</button>{% if item.produto_url %}<a href="{{ item.produto_url }}"><i class="fa-solid fa-pen"></i>Editar produto</a>{% endif %}</div></div></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-box-open"></i><strong>Nenhum produto encontrado</strong><span>Cadastre produtos para começar a controlar o estoque.</span></div></td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="estoque-table-footer">
+            <span id="tableSummary">Mostrando 0 produtos</span>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </section>
+
+    <div class="estoque-bottom-grid">
+        <section class="estoque-panel" id="validade">
+            <div class="section-card-head"><div><div class="section-title"><i class="fa-regular fa-calendar"></i><span>Atenção à validade</span></div><p>Priorize a saída dos lotes que vencem primeiro.</p></div><span class="section-badge warning">{{ vencimentos_count }} lotes</span></div>
+            <div class="mini-list">
+                {% for item in validade_itens %}
+                <div class="mini-list-row"><div><strong>{{ item.nome }}</strong><small>Lote: {{ item.lote|default:"—" }} · {{ item.quantidade|floatformat:0 }} un.</small></div><div class="mini-date"><strong>{{ item.validade }}</strong><small>{{ item.status_text }}</small></div></div>
+                {% empty %}<div class="mini-empty">Nenhum lote próximo do vencimento.</div>{% endfor %}
+            </div>
+            <button class="link-btn" data-scroll-target="validade"><span>Ver todos os vencimentos</span><i class="fa-solid fa-arrow-right"></i></button>
+        </section>
+
+        <section class="estoque-panel" id="reposicao">
+            <div class="section-card-head"><div><div class="section-title"><i class="fa-solid fa-clipboard-list"></i><span>Reposição prioritária</span></div><p>Sugestão de compra para os próximos 7 dias.</p></div><span class="section-badge success">{{ reposicao_total }} produtos</span></div>
+            <div class="mini-list">
+                {% for item in reposicao_itens %}
+                <div class="mini-list-row"><div><strong>{{ item.nome }}</strong><small>{{ item.categoria|default:"Sem categoria" }} · disponível: {{ item.quantidade|floatformat:0 }} un.</small></div><div class="mini-stock"><strong>{{ item.sugestao|floatformat:0 }} un.</strong><small>R$ {{ item.valor_sugestao|floatformat:2 }}</small></div></div>
+                {% empty %}<div class="mini-empty">O estoque está abastecido.</div>{% endfor %}
+            </div>
+            <button class="link-btn" id="btnCriarPedido"><span>Criar pedido de compra</span><i class="fa-solid fa-arrow-right"></i></button>
+        </section>
+    </div>
+</div>
+
+<div class="estoque-modal-backdrop" id="estoqueModalBackdrop" aria-hidden="true">
+    <div class="estoque-modal" role="dialog" aria-modal="true" aria-labelledby="estoqueModalTitle">
+        <div class="estoque-modal-head"><div><span class="estoque-eyebrow">Movimentação</span><h3 id="estoqueModalTitle">Registrar entrada</h3></div><button type="button" class="modal-close" id="estoqueModalClose"><i class="fa-solid fa-xmark"></i></button></div>
+        <form id="estoqueMovimentacaoForm" class="estoque-form">
+            {% csrf_token %}
+            <input type="hidden" name="produto_id" id="modalProdutoId">
+            <input type="hidden" name="tipo" id="modalTipo" value="entrada">
+            <label>Produto<select id="modalProdutoSelect" name="produto_select"><option value="">Selecione um produto</option>{% for item in estoques %}<option value="{{ item.id }}">{{ item.nome }}</option>{% endfor %}</select></label>
+            <label id="quantidadeLabel">Quantidade<input type="number" name="quantidade" id="modalQuantidade" min="0" step="0.01" required placeholder="0"></label>
+            <div class="current-stock" id="currentStockInfo">Estoque atual: <strong>—</strong></div>
+            <label id="novoEstoqueWrap" class="is-hidden">Novo estoque<input type="number" name="novo_estoque" id="modalNovoEstoque" min="0" step="0.01" placeholder="0"></label>
+            <div class="form-actions"><button type="button" class="estoque-btn estoque-btn-secondary" id="estoqueModalCancel">Cancelar</button><button type="submit" class="estoque-btn estoque-btn-primary">Salvar movimentação</button></div>
+            <p class="form-feedback" id="formFeedback"></p>
+        </form>
+    </div>
+</div>
+
+<div class="estoque-toast" id="estoqueToast"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/estoque.js' %}"></script>
+{% endblock %}
